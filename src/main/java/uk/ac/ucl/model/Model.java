@@ -1,7 +1,6 @@
 package uk.ac.ucl.model;
 
 import java.util.List;
-import java.util.Map; 
 
 public class Model {
   private final DataLoader dataLoader = new DataLoader(); 
@@ -16,14 +15,8 @@ public class Model {
   {
     return df;
   }
-
-  public List<String> getColumnNames()
-  {
-    return df.getColumnNames();
-  }
-
-  public List<Map<String, String>> getRows()
-  {
-    return df.getRows();
+  public DataFrame sortDataFrame(List<String> ordering) {
+    DataFrame sortedDf = new DataFrame(); 
+    return sortedDf;
   }
 }

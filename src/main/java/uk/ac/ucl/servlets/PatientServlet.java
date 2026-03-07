@@ -8,39 +8,19 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
-import uk.ac.ucl.model.DataFrameView;
-import uk.ac.ucl.model.JSPTable;
+/*import java.util.List;
+import java.util.Map;
 import uk.ac.ucl.model.Model;
-import uk.ac.ucl.model.ModelFactory;
-import uk.ac.ucl.model.SearchEngine;
-import uk.ac.ucl.model.SortEngine;
+import uk.ac.ucl.model.ModelFactory;*/
 
-@WebServlet({"/test"})
-public class DataServlet extends HttpServlet {
-  public DataServlet () {
+@WebServlet({"/patient"})
+public class PatientServlet extends HttpServlet {
+  public PatientServlet () {
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     try { 
-      Model model = ModelFactory.getModel();
-      SearchEngine searchEngine = new SearchEngine();
-      SortEngine sortEngine = new SortEngine();
-      DataFrameView view = DataFrameView.fullView(model.getDataFrame());
-      view = searchEngine.search(view, "PREFIX", "Mr.", false);
-      view = searchEngine.search(view, "BIRTHDATE","196.*", true);
-      view = sortEngine.sort(view, "GENDER", true);
-      view = sortEngine.sort(view, "ETHNICITY", true);
-      
-      JSPTable jspTable = view.toJSPTable();
-
-      List<String> names = jspTable.names();
-      List<List<String>> columns = jspTable.columns();
-
-      request.setAttribute("names", names);
-      request.setAttribute("columns", columns);
-
       ServletContext context = this.getServletContext();
       RequestDispatcher dispatch = context.getRequestDispatcher("/data.jsp");
       dispatch.forward(request, response);

@@ -2,7 +2,7 @@ package uk.ac.ucl.model;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
@@ -25,15 +25,23 @@ public class DataLoader {
     }
   }
 
-  private void addRow(DataFrame df, CSVRecord record, String header)
+  private void addRow(DataFrame df, CSVRecord record)
   {
     // Default "" for missing data
-    if (record.isMapped(header)) {
-      df.addValue(header, record.get(header).trim());
-    } else {
-      logger.fine("Missing value for column: " + header + " at row: " + record.getRecordNumber());
-      df.addValue(header, "");
+
+    List<String> row = new ArrayList<String>();
+    List<String> headers = df.getColumnNames();
+
+    for (String header : headers) 
+    {
+      boolean mapped = record.isMapped(header);
+      String value = mapped ? record.get(header).trim() : "";
+      if (!mapped) {
+        logger.fine("Missing value for column: " + header + " at row: " + record.getRecordNumber());
+      }
+      row.add(value);
     }
+    df.addRowByValues(row);
   }
 
   private void parseCsv(DataFrame df, CSVParser csvParser, String pathToCsv)
@@ -47,16 +55,14 @@ public class DataLoader {
     if (headers.isEmpty())
     {
       logger.warning("CSV file has no headers: " + pathToCsv);
+      return;
     }
 
     headers.forEach(header -> df.addColumn(header));
 
     for (CSVRecord record : csvParser)
     {
-      for (String header : headers)
-      {
-        addRow(df, record, header);
-      }
+      addRow(df, record);
     }
     logger.info("Loaded " + df.getRowCount(headers.get(0)) + " rows from " + pathToCsv);
   }

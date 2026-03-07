@@ -1,15 +1,15 @@
 package uk.ac.ucl.model;
 
-import java.util.Objects;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class DataFrame {
+
+public class DataFrame implements Frame {
   /*
-  - Stores a collection of columns and their names
-  - columnMap maps column names to column data
+  - Stores a collection of columns and their names.
+  - columnMap maps column names to column data.
    */
 
   private final Map<String, Column> columnMap;
@@ -22,82 +22,84 @@ public class DataFrame {
 
   public void addColumn(String name)
   {
-    Objects.requireNonNull(name, "Column name cannot be null");
-
     if (columnMap.containsKey(name)) {
       throw new IllegalArgumentException("Duplicate column name: " + name);
     }
 
-    Column newColumn = new Column(name);
+    Column newColumn = new Column(name); // includes null check.
     columnMap.put(name, newColumn);
   }
 
+  @Override
   public List<String> getColumnNames()
   {
     // The returned List<String> is immutable
     return List.copyOf(columnMap.keySet());
   }
 
-  private Column getColumn(String name)
+  private Column getColumnInternal(String columnName)
   {
-    Column column = columnMap.get(name);
+    Column column = columnMap.get(columnName);
     if (column == null) { 
-      throw new IllegalArgumentException("No column named: " + name);
+      throw new IllegalArgumentException("No column columnNamed: " + columnName);
     }
     return column;
   }
 
-  public int getRowCount(String name)
+  @Override
+  public List<String> getColumnValues(String columnName)
   {
-    return getColumn(name).getSize();
+    return getColumnInternal(columnName).getEntries(); // Use private method
   }
 
-  public String getValue(String name, int row)
+  public int getRowCount(String columnName)
   {
-    return getColumn(name).getRowValue(row);
+    return getColumnInternal(columnName).getSize();
   }
 
-  public void putValue(String name, int row, String value)
+  public String getValue(String columnName, int row)
   {
-    getColumn(name).setRowValue(row, value);
+    return getColumnInternal(columnName).getRowValue(row);
   }
 
-  public void addValue(String name, String value)
+  public void putValue(String columnName, int row, String value)
   {
-    getColumn(name).addRowValue(value);
+    getColumnInternal(columnName).setRowValue(row, value);
   }
 
-    public Map<String, String> getRow(int rowIndex)
+  public void addValue(String columnName, String value)
   {
-    List<String> columnNames = getColumnNames();
-    Column firstColumn = columnMap.get(columnNames.get(0));
-    if (!firstColumn.hasRowValue(rowIndex)) {
-      throw new IllegalArgumentException("No row with index: " + rowIndex + " in database");
+    getColumnInternal(columnName).addRowValue(value);
+  }
+
+  public void addRowByValues(List<String> values)
+  {
+    List<String> columns = getColumnNames();
+    int numberOfColumns = columns.size();
+    if (values.size() != numberOfColumns) {
+      throw new IllegalArgumentException("Row size mismatch");
     }
-    Map<String, String> row = new LinkedHashMap<>();
-    for (String name : columnNames)
+    for (int index = 0; index < numberOfColumns; index++)
     {
-      String value = getValue(name, rowIndex);
-      row.put(name, value);
+      addValue(columns.get(index), values.get(index));
     }
-    return row;
   }
 
-  public List<Map<String, String>> getRows()
+  @Override
+  public JSPTable toJSPTable() 
   {
-    List<Map<String, String>> rows = new ArrayList<Map<String, String>>();
-
-    List<String> columnNames = getColumnNames();
-    if (columnNames.isEmpty()) {
-      return rows;
-    }
-
-    int rowCount = getRowCount(columnNames.get(0));
-
-    for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
+    List<String> names = getColumnNames();
+    List<List<String>> columns = new ArrayList<>(names.size());
+    for (String columnName : names)
     {
-      rows.add(getRow(rowIndex));
+      List<String> columnEntries = getColumnValues(columnName);
+      int rowCount = columnEntries.size();
+      List<String> column = new ArrayList<>(rowCount);
+      for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        column.add(columnEntries.get(rowIndex));
+      }
+      columns.add(column);
     }
-    return rows; 
+    return new JSPTable(names, columns);
   }
 }

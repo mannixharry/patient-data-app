@@ -1,0 +1,152 @@
+  public void setPrimaryKey(String keyName) 
+  {
+
+    Column keyColumn = getColumn(keyName);
+    
+  }
+
+  public List<String> getColumnNames()
+  {
+    // The returned List<String> is immutable
+    return List.copyOf(columnMap.keySet());
+  }
+
+  private Column getColumn(String columnName)
+  {
+    Column column = columnMap.get(columnName);
+    if (column == null) { 
+      throw new IllegalArgumentException("No column columnNamed: " + columnName);
+    }
+    return column;
+  }
+
+  public int getRowCount(String columnName)
+  {
+    return getColumn(columnName).getSize();
+  }
+
+  public String getValue(String columnName, int row)
+  {
+    return getColumn(columnName).getRowValue(row);
+  }
+
+  public void putValue(String columnName, int row, String value)
+  {
+    getColumn(columnName).setRowValue(row, value);
+  }
+
+  public void addValue(String columnName, String value)
+  {
+    getColumn(columnName).addRowValue(value);
+  }
+
+  public Row getRowByIndex(int rowIndex)
+  {
+    List<String> columnNames = getColumnNames();
+    
+    if (columnNames.isEmpty()) {
+      throw new IllegalArgumentException("No columns in DataFrame");
+    }
+
+    Column firstColumn = getColumn(columnNames.get(0));
+    if (!firstColumn.hasRowValue(rowIndex)) {
+      throw new IllegalArgumentException("No row with index: " + rowIndex + " in database");
+    }
+
+    return new Row(this, rowIndex);
+  }
+
+  public Row getRowById(String id) {
+    Column idColumn = getColumn("ID");
+    int rowCount = getRowCount("ID");
+
+    for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+      if (idColumn.getRowValue(rowIndex).equals(id)) {
+        return getRowByIndex(rowIndex);
+      }
+    }
+    throw new IllegalArgumentException("ID not found" + id );
+  }
+
+  public List<Row> getRows()
+  {
+    List<Row> rows = new ArrayList<Row>();
+
+    List<String> columnNames = getColumnNames();
+    if (columnNames.isEmpty()) {
+      return rows;
+    }
+
+    int rowCount = getRowCount(columnNames.get(0));
+
+    for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
+    {
+      rows.add(getRowByIndex(rowIndex));
+    }
+    return rows; 
+  }
+
+  private void validateRow(Map<String, String> row)
+  {
+    // Could maybe improve this. Throw all errors at once instead of failing at the first one.
+    List<String> columnNames = getColumnNames();
+
+    Set<String> unknownKeys = new HashSet<String>(row.keySet());
+    unknownKeys.removeAll(columnNames);
+    for (String unknownKey : unknownKeys) {
+      logger.warning("Row contains unknown column: " + unknownKey);
+    }
+
+    for (String columnName : columnNames) {
+      row.putIfAbsent(columnName, "");
+      if (row.get(columnName) == null) {
+        throw new IllegalArgumentException("Row value for column: " + columnName + " cannot be null");
+      }
+    }
+  }
+
+  public void addRow(Map<String, String> row)
+  {
+    validateRow(row);
+    for (String columnName : getColumnNames())
+    {
+      String value = row.get(columnName);
+      addValue(columnName, value);
+    }
+  }
+
+
+
+
+  private Pattern getRegexPattern(String keyword, boolean useRegex) 
+  {
+    if (useRegex) {
+      return Pattern.compile(keyword);
+    } else {
+      return Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
+    }
+  }
+
+    public DataFrame searchDataFrame(String searchColumn, String keyword, boolean useRegex)
+  {
+    List<String> columnNames = df.getColumnNames();
+    if (!columnNames.contains(searchColumn)) {
+      throw new IllegalArgumentException("Unkown column: " + searchColumn);
+    }
+
+    DataFrame filteredDf = new DataFrame();
+    for (String columnName : columnNames) {
+      filteredDf.addColumn(columnName);
+    }
+
+    Pattern pattern = getRegexPattern(keyword, useRegex);
+
+    for (Map<String, String> row : df.getRows()) {
+      String value = row.get(searchColumn);
+      if (pattern.matcher(value).find()) { 
+        filteredDf.addRow(row);
+      }
+    }
+    return filteredDf;
+  }
+  Search

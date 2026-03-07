@@ -1,0 +1,18 @@
+Probably want to write a Model-Side sort by... and search by... next.
+Both should work with tags . ie a list describing the precedence 
+Then worry about paging / making room for a search button 
+Add the search button and order by
+Searching works with regex tags 
+
+Add a count feature
+
+
+need to add getRowById
+add a find function to column 
+
+Maybe force DataFrame to have a primary key !!! yes 
+read code add comments and simplify / refactor where possible 
+
+
+DataFrame has methods to do with columns 
+How does sera

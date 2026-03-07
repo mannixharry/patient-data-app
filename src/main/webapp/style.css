@@ -1,0 +1,50 @@
+/* Table links specifically inside your table container */
+.table-container td a,
+.table-container td a:visited {
+    color: black !important;      /* force black color */
+    font-weight: bold;
+    text-decoration: none !important;  /* remove underline */
+
+}
+
+.table-container td a:hover {
+    color: black !important;       /* keep black on hover */
+    font-weight: bold;
+    text-decoration: underline !important; /* underline on hover */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.table-container {
+    width: 100%;           /* container fits parent */
+    overflow-x: auto;      /* allows horizontal scroll */
+    margin-top: 20px;
+    border: 1px solid #ccc;
+}
+
+table {
+    border-collapse: collapse;
+    width: max-content;    /* table keeps its natural width */
+    min-width: 100%;       /* optional: table at least fills container */
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    white-space: nowrap;   /* prevents wrapping inside cells */
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
