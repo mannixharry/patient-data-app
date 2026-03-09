@@ -11,12 +11,13 @@ public class SearchEngine {
   Option to use regex
   Returns a DataFrameView of the matching rows 
    */
-  public DataFrameView search(Frame frame, String searchColumn, String keyword, boolean useRegex)
+
+  public DataFrameView search(DataFrameView view, String searchColumn, String searchTerm, boolean useRegex)
   {
-    Pattern pattern = buildPattern(keyword, useRegex);
+    Pattern pattern = buildPattern(searchTerm, useRegex);
 
     List<Integer> filteredIndices = new ArrayList<>();
-    List<String> columnValues = frame.getColumnValues(searchColumn);
+    List<String> columnValues = view.getColumnValues(searchColumn);
     for (int rowIndex = 0; rowIndex < columnValues.size(); rowIndex++) {
       String value = columnValues.get(rowIndex);
       if (pattern.matcher(value).find()) {
@@ -24,21 +25,33 @@ public class SearchEngine {
       }
     }
 
-    // Create a new DataFrameView of the original Frame's source DataFrame
-    if (frame instanceof DataFrame df) {
-      return new DataFrameView(df, filteredIndices);
-    } else if (frame instanceof DataFrameView view) {
-      return new DataFrameView(view, filteredIndices);
-    } else {
-      throw new IllegalArgumentException("Unsupported Frame type");
-    }
+    return new DataFrameView(view, filteredIndices);
   }
-  private Pattern buildPattern(String keyword, boolean useRegex) 
+
+  public DataFrameView searchAll(DataFrameView view, String searchTerm, boolean useRegex)
+  {
+    Pattern pattern = buildPattern(searchTerm, useRegex);
+
+    List<Integer> filteredIndices = new ArrayList<>();
+    for (String searchColumn : view.getColumnNames()) {
+      List<String> columnValues = view.getColumnValues(searchColumn);
+      for (int rowIndex = 0; rowIndex < columnValues.size(); rowIndex++) {
+        String value = columnValues.get(rowIndex);
+        if (pattern.matcher(value).find()) {
+          filteredIndices.add(rowIndex);
+        }
+      }
+    }
+    return new DataFrameView(view, filteredIndices);
+  }
+  
+
+  private Pattern buildPattern(String searchTerm, boolean useRegex) 
   {
     if (useRegex) {
-      return Pattern.compile(keyword);
+      return Pattern.compile(searchTerm);
     } else {
-      return Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
+      return Pattern.compile(Pattern.quote(searchTerm), Pattern.CASE_INSENSITIVE);
     }
   }
 }

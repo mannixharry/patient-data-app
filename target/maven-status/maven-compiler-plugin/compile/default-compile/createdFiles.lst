@@ -1,11 +1,12 @@
 uk/ac/ucl/servlets/DataServlet.class
-uk/ac/ucl/model/Frame.class
+uk/ac/ucl/servlets/SearchServlet.class
 uk/ac/ucl/main/Main.class
 uk/ac/ucl/model/SearchEngine.class
-uk/ac/ucl/model/JSPTable.class
 uk/ac/ucl/model/DataLoader.class
 uk/ac/ucl/model/DataFrameView.class
 uk/ac/ucl/model/Model.class
+uk/ac/ucl/view/TableExporter.class
+uk/ac/ucl/view/TableData.class
 uk/ac/ucl/model/ModelFactory.class
 uk/ac/ucl/model/DataFrame.class
 uk/ac/ucl/model/SortEngine.class

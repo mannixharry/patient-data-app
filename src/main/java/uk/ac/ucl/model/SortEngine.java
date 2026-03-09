@@ -2,15 +2,13 @@ package uk.ac.ucl.model;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Comparator;
-
 
 public class SortEngine {
-  public DataFrameView sort(Frame frame, String sortColumn, boolean ascending) {
+  public DataFrameView sort(DataFrameView view, String sortColumn, boolean ascending) {
     /* 
     Sorts a DataFrame by a single column in ascending or descending order
     */
-    List<String> columnValues = frame.getColumnValues(sortColumn);
+    List<String> columnValues = view.getColumnValues(sortColumn);
     int rowCount = columnValues.size();
     List<Integer> rowIndices = new ArrayList<>(rowCount);
     for (int i = 0; i < rowCount; i++) {
@@ -27,16 +25,6 @@ public class SortEngine {
     );
 
     List<Integer> sortedIndices = List.copyOf(rowIndices);
-
-    // Create a new DataFrameView of the original Frame's source DataFrame
-    if (frame instanceof DataFrame df) {
-      return new DataFrameView(df, sortedIndices);
-    } else if (frame instanceof DataFrameView view) {
-      return new DataFrameView(view, sortedIndices);
-    } else {
-      throw new IllegalArgumentException("Unsupported Frame type");
-    }
+    return new DataFrameView(view, sortedIndices);
   }
-
 }
-

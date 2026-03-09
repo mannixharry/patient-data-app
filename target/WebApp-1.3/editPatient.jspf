@@ -1,0 +1,44 @@
+<%@ page import = "java.util.List" %>
+<%@ page import = "uk.ac.ucl.view.TableData" %>
+
+<%
+boolean isSinglePatient = hasData && rowCount == 1; 
+%>
+
+<% if (!isSinglePatient) { %>
+  <p class = "error-message"> Error: invalid patient data </p>
+<% } else { %>
+
+  <h3> Edit Patient </h3> 
+  <form action ="patient" method ="post">
+    <div class="table-container">
+      <table>
+        <tbody>
+          <% for (int colIndex = 0; colIndex < names.size(); colIndex++) {
+              String name = names.get(colIndex);
+              String value = columns.get(colIndex).get(0);
+          %>
+            <tr>
+              <% if (name.equals("ID")) { %>
+              <th class="top-header left-header"><%= name %></th>
+              <th class="top-header">
+                <%= value %>
+                <input type="hidden" name="ID" value="<%= value %>">
+              </th>
+              <% } else { %>
+              <th class="left-header"><%= name %></th>
+              <td>
+                <input type="text" name="<%= name %>" value="<%= value %>">
+              </td>
+                <% } %>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <div class=button-row>
+      <button class="button" type="submit">Update</button>
+      <a href="/main" class="button">Back</a>
+    </div>
+  </form>
+<% } %>

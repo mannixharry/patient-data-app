@@ -16,3 +16,25 @@ read code add comments and simplify / refactor where possible
 
 DataFrame has methods to do with columns 
 How does sera
+
+MOST RECENT:
+
+For Saturday 
+
+want to do patient thing next. |
++ work out how to have a button for full / condensed view 
++ write edit patient detail servlet stuff
++ add a new patient
+and worry about writing back to CSV!!
+Do patient editing first!!! this is important
+
+For sunday: 
+
+worry about the GUI a lot more 
+add buttons to search, and sort 
+and JSON? 
+
+
+Get the files in CSV format from data 
+ADd option to load any of them 
+When saving give option to name file bieng saved.

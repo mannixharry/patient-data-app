@@ -1,0 +1,54 @@
+.button {
+  padding: 8px 12px;
+  border: 1px solid var(--blue-100);
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+
+  background-color: var(--blue-300);
+  color: var(--blue-700);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: var(--blue-500);
+}
+
+.button, .small-button:active{
+  transform: translateY(1px);
+}
+
+.small-button {
+  padding: 2px 6px;
+  border: 1px solid var(--blue-100);
+  border-radius: 4px;
+  font-size: 10px;
+  cursor: pointer;
+
+  background-color: var(--blue-100);
+  color: var(--blue-700);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.small-button:hover {
+  background-color: var(--blue-300);
+}
+.button-row {
+  display: flex;
+  gap:10px;
+  width: fit-content;
+  max-width: 90vw;
+  max-height: 70vh;
+  overflow: auto;
+  background-color: white;
+  margin: 2vh auto;
+  padding-bottom: 16px;
+}
+
+.inline-form {
+  display: flex;
+  gap: 8px; /* space between elements inside form */
+  align-items: center;
+}

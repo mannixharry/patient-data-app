@@ -1,0 +1,77 @@
+.table-container {
+  position: relative;
+  /* vh and vw are each 1% of the screen width and height*/
+  width: fit-content;
+  max-width: 90vw;
+  max-height: 70vh;
+  overflow: auto;
+  background-color: white;
+  margin: 2vh auto;
+  padding-bottom: 16px;
+  box-sizing: border-box; /* ensures padding/border included in size */
+}
+
+table {
+  /* 
+  Cells size grows / shrinks to fit content but
+  never shrinks smaller than the size of the container
+  Adjacent cell borders merge together
+  */
+  border-collapse: separate; /* Seperate borders so sticky headers work */
+  border-spacing: 0;
+  margin: 0;
+  width: auto;
+}
+
+th { 
+  top: 0;
+  background-color: var(--blue-300);
+  z-index: 10; /* Higher so headers appear over rows */ 
+  border-right: 1px solid var(--blue-100);
+  border-bottom: 1px solid var(--blue-100);
+  padding: 8px 12px;
+  white-space: wrap;
+  text-align: left;
+  color: var(--blue-700);
+}
+
+thead th {
+  position: sticky;
+}
+
+td {
+  color: var(--blue-600);
+  border-bottom: 1px solid var(--blue-100);
+  border-right: 1px solid var(--blue-100);
+  padding: 8px 12px;
+  white-space: nowrap; /* prevents text from wrapping to a new line */
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.top-header {
+  border-top: 1px solid var(--blue-100) ;
+}
+
+.left-header {
+  border-left: 1px solid var(--blue-100);
+}
+
+.table-container a {
+  color: var(--blue-600);     /* set text color */
+  text-decoration: underline;       /* remove underline */
+  padding: 1vh 1vw;
+}
+
+
+.table-container a:visited {
+  color: var(--blue-600);     /* keep the color consistent */
+  text-decoration: underline;       /* keep no underline */
+}
+
+.table-container a:hover,
+.table-container a:focus,
+.table-container a:active {
+  color: var(--blue-200);    /* hover or click appears blue-300 */
+  text-decoration: underline;
+}

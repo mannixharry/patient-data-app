@@ -64,7 +64,7 @@ public class DataLoader {
     {
       addRow(df, record);
     }
-    logger.info("Loaded " + df.getRowCount(headers.get(0)) + " rows from " + pathToCsv);
+    logger.info("Loaded " + df.getRowCount() + " rows from " + pathToCsv);
   }
 
   public DataFrame load(String pathToCsv)

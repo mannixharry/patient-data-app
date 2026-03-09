@@ -36,6 +36,18 @@ public class Column {
     return List.copyOf(entries); // Return a copy to enforce immutability
   }
 
+  public int find(String value) {
+    if (value == null) {
+      throw new IllegalArgumentException("Search value cannot be null");
+    }
+    for (int rowIndex=0; rowIndex < getSize(); rowIndex++) {
+      if (value.equals(entries.get(rowIndex))) {
+        return rowIndex;
+      }
+    }
+    return -1; 
+  }
+
   public boolean hasRowValue(int row) 
   {
    return row >= 0 && row < entries.size();
@@ -66,5 +78,10 @@ public class Column {
       throw new IllegalArgumentException("Row value cannot be null");
     }
     entries.add(value);
+  }
+
+  public void deleteRowValue(int row) 
+  {
+    entries.remove(row);
   }
 }

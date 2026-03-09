@@ -3,7 +3,7 @@ package uk.ac.ucl.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataFrameView implements Frame {
+public class DataFrameView {
   /*
   A DataFrameView represents a filtered or partial view of a DataFrame
   Instead of storing its own data, it maintains a list of row indices that 
@@ -37,7 +37,7 @@ public class DataFrameView implements Frame {
       throw new IllegalArgumentException("Cannot create full view of empty DataFrame");
     }
 
-    int rowCount = df.getRowCount(df.getColumnNames().get(0));
+    int rowCount = df.getRowCount();
     List<Integer> allIndices = new ArrayList<>(rowCount);
     for (int i = 0; i < rowCount; i++) {
       allIndices.add(i);
@@ -53,13 +53,11 @@ public class DataFrameView implements Frame {
     return List.copyOf(rowIndices);
   }
 
-  @Override
   public List<String> getColumnNames()
   {
     return sourceDf.getColumnNames();
   }
 
-  @Override
   public List<String> getColumnValues(String columnName) 
   {
     List<String> sourceColumn = sourceDf.getColumnValues(columnName);
@@ -68,23 +66,5 @@ public class DataFrameView implements Frame {
       viewColumn.add(sourceColumn.get(rowIndex));
     }
     return viewColumn;
-  }
-
-  @Override
-  public JSPTable toJSPTable() 
-  {
-    List<String> names = sourceDf.getColumnNames();
-    List<List<String>> columns = new ArrayList<>(names.size());
-
-    for (String columnName : names)
-    {
-      List<String> columnEntries = sourceDf.getColumnValues(columnName);
-      List<String> column = new ArrayList<>(rowIndices.size());
-      for (int rowIndex : rowIndices) {
-        column.add(columnEntries.get(rowIndex));
-      }
-      columns.add(column);
-    }
-    return new JSPTable(names, columns);
   }
 }

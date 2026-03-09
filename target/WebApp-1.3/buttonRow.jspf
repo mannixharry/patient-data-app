@@ -1,0 +1,29 @@
+<div class="button-row">
+  <form action="/search" method="post">
+    <button type="submit" class="button">Search</button>
+  </form>
+  <form action="/sort" method="post">
+    <button type="submit" class="button">Sort</button>
+  </form>
+  <form action="/new" method="post">
+    <button type="submit" class="button">New</button>
+  </form>
+  <form action="/import" method="post">
+    <button type="submit" class="button">Import</button>
+  </form>
+  <form action="/export" method="post">
+    <button type="submit" class="button">Export</button>
+  </form>
+  <form action="/undo" method="post">
+    <button type="submit" class="button">Undo</button>
+  </form>
+  <form action="/redo" method="post">
+    <button type="submit" class="button">redo</button>
+  </form>
+  <form action="/statistics" method="post">
+    <button type="submit" class="button">Statistics</button>
+  </form>
+  <form action="/graphs" method="post">
+    <button type="submit" class="button">Graphs</button>
+  </form>
+</div>

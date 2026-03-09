@@ -1,0 +1,10 @@
+<% if (pageMode != null && !pageMode.isEmpty()) {
+  List<String> buttonNames = new ArrayList<>();
+  buttonNames.add("All");
+  buttonNames.addAll(table.getNames()); %>
+  <form action="/search" method="post" class="button-row">
+    <% for (String name : buttonNames) { %>
+      <button type="submit" name="searchColumn" value="<%=name%>"> <%= name %> </button>
+    <% } %>
+  </form> 
+<% } %>

@@ -1,0 +1,25 @@
+:root {
+  --blue-100: #bac4ce;  /* lightest */
+  --blue-200: #a5b3bf;
+  --blue-300: #90a1b1;
+  --blue-400: #7b8fa2;
+  --blue-500: #677e92;  /* darkest */
+  --blue-600: #4d5e73;
+  --blue-700: #304055;
+}/* Global colour schema */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.error-message {
+    color: var(--blue-500);
+    font-weight: bold; 
+}
+
+h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
