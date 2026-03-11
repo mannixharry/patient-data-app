@@ -1,18 +1,20 @@
 package uk.ac.ucl.view;
 
+
 import java.io.BufferedWriter;
-import java.io.FileWriter; 
 import java.io.IOException;
-import java.io.Writer;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.List;
 
-import uk.ac.ucl.model.DataLoader;
-
 public class TableExporter {
 
-  private static final Logger logger = Logger.getLogger(DataLoader.class.getName());
+  private static final Logger logger = Logger.getLogger(TableExporter.class.getName());
 
   private final TableData table;
 
@@ -33,11 +35,8 @@ public class TableExporter {
 
   public void toCSV(String pathToCsv)
   { 
-    try (
-      FileWriter fileWriter= new FileWriter(pathToCsv);
-      Writer writer = new BufferedWriter(fileWriter);
-    )
-
+    Path path = Paths.get(pathToCsv);
+    try (BufferedWriter writer = Files.newBufferedWriter(path))
     {
       List<String> names = table.getNames();
       List<List<String>> columns = table.getColumns();

@@ -7,8 +7,14 @@
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/model/ModelFactory.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/model/SearchEngine.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/model/SortEngine.java
+/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/model/ViewEngine.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/DataServlet.java
-/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/PatientServlet.java
+/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/EditServlet.java
+/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/ImportServlet.java
+/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/MainServlet.java
+/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/NewServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/SearchServlet.java
+/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/SortServlet.java
+/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/utility/CsvDirectoryScanner.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/view/TableData.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/view/TableExporter.java

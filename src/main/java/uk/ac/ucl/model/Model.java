@@ -1,15 +1,17 @@
 package uk.ac.ucl.model;
 
-import java.util.List; 
+import java.util.List;
 
 public class Model {
 
   private final DataLoader dataLoader = new DataLoader();
   SearchEngine searchEngine = new SearchEngine();
   SortEngine sortEngine = new SortEngine();
+  ViewEngine viewEngine = new ViewEngine();
 
   private DataFrame df; 
   private DataFrameView view; 
+  private String key;
 
   public void loadCsv(String pathToCsv)
   {
@@ -21,8 +23,34 @@ public class Model {
     return df.getColumnNames(); 
   }
 
-  public int getRowIndexByValue(String columnName, String value) {
+  public String getKeyName() {
+    return key;
+  }
+
+  public void setKey(String key) {
+    if (checkValidKey(key)) {
+      this.key = key;
+    } else {
+      throw new IllegalArgumentException("Invalid key: " + key);
+    }
+  }
+
+  public boolean checkValidKey(String key) {
+    if (key == null || key.isEmpty()) {return true;}
+    List<String> keyEntries = df.getColumnValues(key);
+    return keyEntries.size() == keyEntries.stream().distinct().count();
+  }
+  
+  public int getKeyIndex() {
+    return df.getColumnNames().indexOf(getKeyName());
+  }
+
+  public int getRowIndexInDfByValue(String columnName, String value) {
     return df.getRowIndexByValue(columnName, value);
+  }
+
+  public int getRowIndexInViewByValue(String columnName, String value) {
+    return view.getRowIndexByValue(columnName, value);
   }
 
   public void setRow(int row, List<String> values) {
@@ -41,8 +69,27 @@ public class Model {
     return view;
   }
 
-  public void clearView() { 
+  public void restrictViewRows(List<Integer> rowIndices)
+  {
+    view = viewEngine.restrictRows(view, rowIndices);
+  }
+
+  public void restrictViewToRowRange(int start, int end)
+  {
+    view = viewEngine.restrictToRowRange(view, start, end);
+  }
+
+  public void restrictViewColumns(List<String> columnNames) 
+  {
+    view = viewEngine.restrictColumns(view, columnNames);
+  }
+
+  public void refreshView() { 
     view = DataFrameView.fullView(df);
+  }
+
+  public void emptyView() {
+    view = DataFrameView.emptyView(df);
   }
 
   public void search(String searchColumn, String searchTerm, boolean useRegex) {

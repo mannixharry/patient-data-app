@@ -19,22 +19,24 @@ How does sera
 
 MOST RECENT:
 
-For Saturday 
+Tuesday
+Import export 
+Start on basic stats 
+FORCE UNIQUENESS OF NEW patient
 
-want to do patient thing next. |
-+ work out how to have a button for full / condensed view 
-+ write edit patient detail servlet stuff
-+ add a new patient
-and worry about writing back to CSV!!
-Do patient editing first!!! this is important
-
-For sunday: 
-
-worry about the GUI a lot more 
-add buttons to search, and sort 
-and JSON? 
+Wednesday 
+REFACTOR + comments
+NEED TO ADD ID IS UNIQUE CHECKS!!!!!!!!
+CHANGE P TO <SPAN>
 
 
-Get the files in CSV format from data 
-ADd option to load any of them 
-When saving give option to name file bieng saved.
+Thursday - Friday Stats + gRAHPsS
+Saturday - Hopefully finished
+
+
+Then gRAHPs
+and stats page
+ 
+Then basically done.
+Condensed view
++ Multitable??? 

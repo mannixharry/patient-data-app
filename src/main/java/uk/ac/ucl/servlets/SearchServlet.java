@@ -44,7 +44,7 @@ public class SearchServlet extends HttpServlet {
 
       TableData table = TableData.fromView(model.getView());
       request.setAttribute("table", table);
-
+      
       ServletContext context = this.getServletContext();
       RequestDispatcher dispatch = context.getRequestDispatcher("/data");
       dispatch.forward(request, response);

@@ -1,6 +1,7 @@
 package uk.ac.ucl.model;
 
 import java.util.List;
+
 import java.util.ArrayList;
 
 public class Column {
@@ -56,7 +57,7 @@ public class Column {
   public String getRowValue(int row) 
   {
     if (!hasRowValue(row)) {
-      throw new IndexOutOfBoundsException("Column " + name + ": Row index " + row + " out of bounds");
+      throw new IndexOutOfBoundsException("Column: " + name + "; Row index out of bounds: " + row);
     }
     return entries.get(row);
   }
@@ -67,7 +68,7 @@ public class Column {
       throw new IllegalArgumentException("Row value cannot be null");
     }
     if (!hasRowValue(row)) {
-      throw new IndexOutOfBoundsException("Column " + name + ": Row index " + row + " out of bounds");
+      throw new IndexOutOfBoundsException("Column: " + name + "; Row index out of bounds: " + row);
     }
     entries.set(row, value);
   }

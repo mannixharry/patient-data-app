@@ -1,11 +1,14 @@
 <%@ page import = "java.util.List" %>
 <%@ page import = "java.util.ArrayList" %>
-
+<%@ page import = "uk.ac.ucl.view.TableData" %>
 <% 
-String selectedColumn = request.getParameter("searchColumn");
-String searchTerm = request.getParameter("searchTerm");
+TableData table = (TableData) request.getAttribute("table");
+String pageMode = (String) request.getAttribute("pageMode");
 
-if (pageMode.equals("search")) {
+String searchColumn = request.getParameter("searchColumn");
+String searchTerm = request.getParameter("searchTerm");
+%>
+<% if (pageMode.equals("search")) {
   List<String> buttonNames = new ArrayList<>();
   buttonNames.add("ANY");
   buttonNames.addAll(table.getNames()); %>
@@ -15,11 +18,11 @@ if (pageMode.equals("search")) {
     <% } %>
   </form> 
 
-  <% if (selectedColumn != null && !selectedColumn.isEmpty()) { %>
+  <% if (searchColumn != null && !searchColumn.isEmpty()) { %>
     <div class="button-row">
       <form action="/search" method="get" class="inline-form">
-        <input type="hidden" name="searchColumn" value="<%= selectedColumn %>">
-        <p class="small-button">Searching in <%= selectedColumn %> </p>
+        <input type="hidden" name="searchColumn" value="<%= searchColumn %>">
+        <p class="info">Searching in <%= searchColumn %> </p>
         <input type="text" name="searchTerm" placeholder="Enter search term" value="<%= searchTerm != null ? searchTerm : "" %>">
         <button type="submit" class="small-button">Go</button>
       </form>

@@ -8,7 +8,7 @@
   background-color: white;
   margin: 2vh auto;
   padding-bottom: 16px;
-  box-sizing: border-box; /* ensures padding/border included in size */
+  box-sizing: border-box;
 }
 
 table {
@@ -17,7 +17,7 @@ table {
   never shrinks smaller than the size of the container
   Adjacent cell borders merge together
   */
-  border-collapse: separate; /* Seperate borders so sticky headers work */
+  border-collapse: separate;
   border-spacing: 0;
   margin: 0;
   width: auto;
@@ -26,7 +26,7 @@ table {
 th { 
   top: 0;
   background-color: var(--blue-300);
-  z-index: 10; /* Higher so headers appear over rows */ 
+  z-index: 10;
   border-right: 1px solid var(--blue-100);
   border-bottom: 1px solid var(--blue-100);
   padding: 8px 12px;
@@ -58,20 +58,26 @@ td {
 }
 
 .table-container a {
-  color: var(--blue-600);     /* set text color */
-  text-decoration: underline;       /* remove underline */
+  color: var(--blue-600);
+  text-decoration: underline;
   padding: 1vh 1vw;
 }
 
 
 .table-container a:visited {
-  color: var(--blue-600);     /* keep the color consistent */
-  text-decoration: underline;       /* keep no underline */
+  color: var(--blue-600);
+  text-decoration: underline;
 }
 
 .table-container a:hover,
 .table-container a:focus,
 .table-container a:active {
-  color: var(--blue-200);    /* hover or click appears blue-300 */
+  color: var(--blue-200);
   text-decoration: underline;
+}
+
+a.row-link {
+  text-decoration: none;
+  font-style: italic;
+  color: inherit;
 }

@@ -1,20 +1,17 @@
-<%@ page import = "java.util.List" %>
-<%@ page import = "uk.ac.ucl.view.TableData" %>
-<% TableData table = (TableData) request.getAttribute("table");
-String pageMode = (String) request.getAttribute("pageMode"); %>
-
 <html>
-<head>
-  <%@ include file="/header.jspf" %>
-</head>
+  <head>
+    <jsp:include page="/header.jsp" />
+  </head>
 
-<body>
-  <div class="main">
-    <h3> Patient Data </h3>
-    <%@ include file="/error.jsp" %>
-    <%@ include file="/table.jspf" %>
-    <%@ include file="/searchBar.jspf" %>
-    <%@ include file="/buttonRow.jspf" %>
-  </div>
-</body>
+  <body>
+    <div class="main">
+      <h3> Patient Data </h3>
+      <jsp:include page="/error.jsp" />
+      <jsp:include page="/table.jsp" />
+      <jsp:include page="/search.jsp" />
+      <jsp:include page="/sort.jsp" />
+      <jsp:include page="/import.jsp" />
+      <jsp:include page="/buttonRow.jsp" />
+    </div>
+  </body>
 </html>

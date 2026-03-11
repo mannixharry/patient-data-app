@@ -2,7 +2,9 @@ package uk.ac.ucl.model;
 
 import java.util.regex.Pattern;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SearchEngine {
 
@@ -25,7 +27,7 @@ public class SearchEngine {
       }
     }
 
-    return new DataFrameView(view, filteredIndices);
+    return new DataFrameView(view, filteredIndices, null);
   }
 
   public DataFrameView searchAll(DataFrameView view, String searchTerm, boolean useRegex)
@@ -33,16 +35,19 @@ public class SearchEngine {
     Pattern pattern = buildPattern(searchTerm, useRegex);
 
     List<Integer> filteredIndices = new ArrayList<>();
+    Set<Integer> filteredSet = new HashSet<>();
+
     for (String searchColumn : view.getColumnNames()) {
       List<String> columnValues = view.getColumnValues(searchColumn);
       for (int rowIndex = 0; rowIndex < columnValues.size(); rowIndex++) {
         String value = columnValues.get(rowIndex);
-        if (pattern.matcher(value).find()) {
+        if (pattern.matcher(value).find() && !filteredSet.contains(rowIndex)) {
           filteredIndices.add(rowIndex);
+          filteredSet.add(rowIndex);
         }
       }
     }
-    return new DataFrameView(view, filteredIndices);
+    return new DataFrameView(view, filteredIndices, null);
   }
   
 

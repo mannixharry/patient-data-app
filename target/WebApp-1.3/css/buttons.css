@@ -9,19 +9,49 @@
   color: var(--blue-700);
   font-weight: bold;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .button:hover {
-  background-color: var(--blue-400);
+  background-color: var(--blue-500);
 }
 
-.button:active{
+.button, .small-button:active{
   transform: translateY(1px);
 }
 
+.small-button {
+  padding: 2px 6px;
+  border: 2px solid var(--blue-100);
+  border-radius: 4px;
+  font-size: 10px;
+  cursor: pointer;
+
+  background-color: var(--blue-100);
+  color: var(--blue-700);
+  font-weight: bold;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.small-button:hover {
+  background-color: var(--blue-300);
+}
 .button-row {
   display: flex;
-  gap:10px;
-  justify-content: center;
+  gap:8px;
+  width: fit-content;
+  max-width: 90vw;
+  max-height: 5vh;
+  overflow: auto;
+  background-color: white;
+  margin: 2vh auto;
+  padding-bottom: 16px;
+}
+
+.inline-form {
+  display: flex;
+  gap: 8px;
   align-items: center;
+  margin: 0;
 }

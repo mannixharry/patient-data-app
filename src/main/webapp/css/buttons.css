@@ -9,6 +9,7 @@
   color: var(--blue-700);
   font-weight: bold;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .button:hover {
@@ -21,7 +22,7 @@
 
 .small-button {
   padding: 2px 6px;
-  border: 1px solid var(--blue-100);
+  border: 2px solid var(--blue-100);
   border-radius: 4px;
   font-size: 10px;
   cursor: pointer;
@@ -30,6 +31,7 @@
   color: var(--blue-700);
   font-weight: bold;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .small-button:hover {
@@ -37,10 +39,10 @@
 }
 .button-row {
   display: flex;
-  gap:10px;
+  gap:8px;
   width: fit-content;
   max-width: 90vw;
-  max-height: 70vh;
+  max-height: 5vh;
   overflow: auto;
   background-color: white;
   margin: 2vh auto;
@@ -49,6 +51,7 @@
 
 .inline-form {
   display: flex;
-  gap: 8px; /* space between elements inside form */
+  gap: 8px;
   align-items: center;
+  margin: 0;
 }

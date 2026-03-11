@@ -11,60 +11,112 @@ public class DataFrameView {
   This is useful for searching, and sorting since it provides read-only access
   to the selected rows.
   */
-  private final DataFrame sourceDf;
+  private final DataFrame source;
   private final List<Integer> rowIndices;
-
-  public DataFrameView(DataFrame sourceDf, List<Integer> rowIndices)
+  private final List<Integer> columnIndices;
+  
+  // Needs attention: make sure doesnt fail on rowIndices out of range
+ // NEEDS TO ENSURE VIEW IS UNIQUE!!!!!!!! (MAYBE IDK)
+  // Columns use the same logic as Rows for simplicity (but we never really chain columnViews together)
+  public DataFrameView(DataFrame sourceDf, List<Integer> rowIndices, List<Integer> columnIndices)
   {
-    this.sourceDf = sourceDf;
-    this.rowIndices = List.copyOf(rowIndices); 
+    this.source = sourceDf;
+    int rowCount = sourceDf.getRowCount();
+    int columnCount = sourceDf.getColumnNames().size();
+    this.rowIndices = List.copyOf(defaultIndices(rowIndices, rowCount)); 
+    this.columnIndices = List.copyOf(defaultIndices(columnIndices, columnCount));
   }
 
-  public DataFrameView(DataFrameView sourceView, List<Integer> rowIndices)
+  public DataFrameView(DataFrameView sourceView, List<Integer> rowIndices, List<Integer> columnIndices)
   {
-    this.sourceDf = sourceView.getSource();
-    List<Integer> sourceIndices = sourceView.getRowIndices();
-    List<Integer> mappedIndices = new ArrayList<>(rowIndices.size());
-    for (int rowIndex : rowIndices) {
-      mappedIndices.add(sourceIndices.get(rowIndex));
+    this.source = sourceView.getSource();
+
+    List<Integer> sourceRows = sourceView.getRowIndices();
+    List<Integer> sourceColumns = sourceView.getColumnIndices();
+    
+    this.rowIndices = List.copyOf(mapIndices(sourceRows, defaultIndices(rowIndices, sourceRows.size())));
+    this.columnIndices = List.copyOf(mapIndices(sourceColumns, defaultIndices(columnIndices, sourceColumns.size())));
+  }
+
+  private List<Integer> defaultIndices(List<Integer> indices, int size) {
+    if (indices != null) {return indices;}
+    List<Integer> all = new ArrayList<>(size);
+    for (int i=0; i<size; i++) {
+      all.add(i);
     }
-    this.rowIndices = List.copyOf(mappedIndices);
+    return all; 
+  }
+
+  private List<Integer> mapIndices(List<Integer> source, List<Integer> toMap) {
+    List<Integer> mapped = new ArrayList<>(toMap.size());
+    for (int i : toMap) {
+      mapped.add(source.get(i));
+    }
+    return mapped;
   }
 
   public static DataFrameView fullView(DataFrame df) {
-
     if (df.getColumnNames().isEmpty()) {
       throw new IllegalArgumentException("Cannot create full view of empty DataFrame");
     }
+    return new DataFrameView(df, null, null);
+  }
 
-    int rowCount = df.getRowCount();
-    List<Integer> allIndices = new ArrayList<>(rowCount);
-    for (int i = 0; i < rowCount; i++) {
-      allIndices.add(i);
+  public static DataFrameView emptyView(DataFrame df) {
+    if (df.getColumnNames().isEmpty()) {
+      throw new IllegalArgumentException("Cannot create empty view of empty DataFrame");
     }
-    return new DataFrameView(df, allIndices);
+    List<Integer> emptyIndices = new ArrayList<>();
+    return new DataFrameView(df, emptyIndices, null);
   }
 
   public DataFrame getSource() {
-    return sourceDf; 
+    return source; 
   }
 
   public List<Integer> getRowIndices() {
     return List.copyOf(rowIndices);
   }
 
+  public List<Integer> getColumnIndices() {
+    return List.copyOf(columnIndices);
+  }
+
   public List<String> getColumnNames()
   {
-    return sourceDf.getColumnNames();
+    List<String> sourceNames = source.getColumnNames();
+    List<String> viewNames = new ArrayList<>(columnIndices.size());
+    for (int columnIndex : columnIndices) { 
+      viewNames.add(sourceNames.get(columnIndex));
+    }
+    return viewNames;
   }
 
   public List<String> getColumnValues(String columnName) 
   {
-    List<String> sourceColumn = sourceDf.getColumnValues(columnName);
+    List<String> sourceColumn = source.getColumnValues(columnName);
     List<String> viewColumn = new ArrayList<>(rowIndices.size());
     for (int rowIndex : rowIndices) {
       viewColumn.add(sourceColumn.get(rowIndex));
     }
     return viewColumn;
+  }
+
+  public List<String> getColumnValuesByIndex(int columnIndex) 
+  {
+    List<String> sourceColumn = source.getColumnValues(source.getColumnNames().get(columnIndices.get(columnIndex)));
+    List<String> viewColumn = new ArrayList<>(rowIndices.size());
+    for (int rowIndex : rowIndices) {
+      viewColumn.add(sourceColumn.get(rowIndex));
+    }
+    return viewColumn;
+  }
+
+  public int getRowIndexByValue(String columnName, String value) {
+    List<String> column = getColumnValues(columnName);
+    for (int i = 0; i < column.size(); i++) {
+      if (column.get(i).equals(value)) {return i;}
+    }
+    return -1; // not found
   }
 }

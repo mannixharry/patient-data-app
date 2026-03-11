@@ -1,45 +1,32 @@
 package uk.ac.ucl.servlets;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import uk.ac.ucl.model.Model;
-import uk.ac.ucl.model.ModelFactory;
-import uk.ac.ucl.view.TableData;
 
 import java.io.IOException;
 
-@WebServlet({"/main"})
-public class MainServlet extends HttpServlet {
-  public MainServlet () {
-  }
+import uk.ac.ucl.model.Model;
+import uk.ac.ucl.model.ModelFactory;
 
-  public void forwardToError(HttpServletRequest request, HttpServletResponse response, String message) 
-  throws IOException, ServletException {
-    request.setAttribute("errorMessage", message);
-    ServletContext context = this.getServletContext();
-    RequestDispatcher dispatch = context.getRequestDispatcher("/error.jsp");
-    dispatch.forward(request, response);
+@WebServlet({ "/main" })
+public class MainServlet extends BaseServlet {
+  public MainServlet() {
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
+      Model model = ModelFactory.getModel();
+      // Refresh the model view so that it covers the whole DataFrame
+      model.refreshView();
+      // Flag to tell JSPs to display table + main menu
       request.setAttribute("pageMode", "main");
 
-      Model model = ModelFactory.getModel();
-      model.clearView();
-
-      TableData table = TableData.fromView(model.getView());
-      request.setAttribute("table", table);
-
-      ServletContext context = this.getServletContext();
-      RequestDispatcher dispatch = context.getRequestDispatcher("/data");
-      dispatch.forward(request, response);
+      // Dispatch request to the DataServlet
+      // 'table' and 'key' request attributes will be set by the DataServlet
+      forward(request, response, "/data");
     } catch (Exception e) {
       forwardToError(request, response, "Unexpected error: " + e.getMessage());
     }

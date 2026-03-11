@@ -25,6 +25,6 @@ public class SortEngine {
     );
 
     List<Integer> sortedIndices = List.copyOf(rowIndices);
-    return new DataFrameView(view, sortedIndices);
+    return new DataFrameView(view, sortedIndices, null);
   }
 }

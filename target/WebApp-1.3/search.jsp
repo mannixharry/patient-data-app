@@ -1,0 +1,31 @@
+<%@ page import = "java.util.List" %>
+<%@ page import = "java.util.ArrayList" %>
+
+<% 
+String searchColumn = request.getParameter("searchColumn");
+String searchTerm = request.getParameter("searchTerm");
+
+if (pageMode.equals("search")) {
+  List<String> buttonNames = new ArrayList<>();
+  buttonNames.add("ANY");
+  buttonNames.addAll(table.getNames()); %>
+  <form action="/search" method="get" class="button-row">
+    <% for (String name : buttonNames) { %>
+      <button class="small-button" type="submit" name="searchColumn" value="<%=name%>"> <%= name %> </button>
+    <% } %>
+  </form> 
+
+  <% if (searchColumn != null && !searchColumn.isEmpty()) { %>
+    <div class="button-row">
+      <form action="/search" method="get" class="inline-form">
+        <input type="hidden" name="searchColumn" value="<%= searchColumn %>">
+        <p class="info">Searching in <%= searchColumn %> </p>
+        <input type="text" name="searchTerm" placeholder="Enter search term" value="<%= searchTerm != null ? searchTerm : "" %>">
+        <button type="submit" class="small-button">Go</button>
+      </form>
+      <form action="/main" method="get" class="inline-form">
+        <button type="submit" class="small-button">Back</button>
+      </form>
+    </div>
+  <% } %>
+<% } %>
