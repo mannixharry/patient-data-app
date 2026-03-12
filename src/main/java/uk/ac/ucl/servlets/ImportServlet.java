@@ -21,14 +21,14 @@ public class ImportServlet extends BaseServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
+      // Flag to tell JSPs to display (current) table + import input bar
+      request.setAttribute("pageMode", "import");
+
       Model model = ModelFactory.getModel();
 
       // Gets the full path to /data (where the .csv files are stored)
-      Path dataDirectory = Paths.get(
-          getServletContext().getRealPath("/data"));
-
-      // Flag to tell JSPs to display (current) table + import input bar
-      request.setAttribute("pageMode", "import");
+      String projectRoot = System.getProperty("user.dir"); // COMP0004-Coursework
+      Path dataDirectory = Paths.get(projectRoot, "data");
 
       // User inputs (see import.jsp) are passed as parameters in the URL
       // Since the user enters this information using seperate HTML forms, we store
@@ -47,7 +47,7 @@ public class ImportServlet extends BaseServlet {
       if (hasPath) {
         // Get the full path to the input .csv file and load it into the model
         Path fullPath = dataDirectory.resolve(inputPath);
-        model.loadCsv(fullPath.toString());
+        model.loadCsv(fullPath);
 
         // Java stream interrogates the model to get a list of column names with unique
         // column values. We attach this to the request so import.jsp can show the user

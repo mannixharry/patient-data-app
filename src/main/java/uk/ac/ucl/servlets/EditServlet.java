@@ -7,38 +7,47 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import java.io.IOException;
 
 import uk.ac.ucl.view.TableData;
-
+import uk.ac.ucl.model.DataFrameView;
 import uk.ac.ucl.model.Model;
 import uk.ac.ucl.model.ModelFactory;
 
 @WebServlet({ "/patient" })
 public class EditServlet extends BaseServlet {
-  public EditServlet() {
-  }
-
+  // EditServlet manages 'update' and 'delete' actions
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    // Uniquely identifies the 'patient' (or generally a row in the database) using
+    // 'row' parameter - the row number in the current model VIEW (important)
+
     try {
+      // Flag to tell JSPs to display 'edit' page
+      request.setAttribute("pageMode", "edit");
+
       Model model = ModelFactory.getModel();
 
-      String patientID = request.getParameter(model.getKeyName());
-      if (patientID == null || patientID.isEmpty()) {
-        throw new IllegalArgumentException("Missing patient key");
-      }
-      String exactIdRegex = "^" + Pattern.quote(patientID) + "$";
+      // Retrieve row parameter
+      // Row is the row number in the current view identified by row
+      int row = Integer.parseInt(request.getParameter("row"));
 
-      model.refreshView();
-      model.search(model.getKeyName(), exactIdRegex, true);
-      TableData patientTable = TableData.fromView(model.getView());
-      request.setAttribute("patientTable", patientTable);
-      request.setAttribute("isNew", false);
+      // Get the row number in the main DataFrame uniquely identified by row
+      DataFrameView single_view = model.getView().restrictToRow(row);
+      TableData table = TableData.fromView(single_view);
+      request.setAttribute("table", table);
+
+      // Attach the row number to the request
+      request.setAttribute("row", row);
+
+      // Attach the key to the request
       request.setAttribute("key", model.getKeyName());
-      request.setAttribute("pageMode", "edit");
+
+      // The same JSP handles 'edit' and 'new' commands requests - isNew is a flag to
+      // the JSP to specify the type of request. In this case, we submit 'false'
+      request.setAttribute("isNew", false);
+      // Pass the request onto the 'patient' JSP
       forward(request, response, "patient.jsp");
     } catch (IllegalArgumentException e) {
       forwardToError(request, response, "Error loading data: " + e.getMessage());
@@ -50,12 +59,11 @@ public class EditServlet extends BaseServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     try {
+      // The type of action is specified by the 'action' parameter
       Model model = ModelFactory.getModel();
+
       String action = request.getParameter("action");
-      String patientID = request.getParameter(model.getKeyName());
-      if (patientID == null || patientID.isEmpty()) {
-        throw new IllegalArgumentException("Missing patient ID");
-      }
+      Integer row = Integer.parseInt(request.getParameter("row"));
 
       if ("update".equals(action)) {
         List<String> names = model.getColumnNames();
@@ -65,15 +73,11 @@ public class EditServlet extends BaseServlet {
           values.add(request.getParameter(name));
         }
 
-        int rowIndex = model.getRowIndexInDfByValue(model.getKeyName(), patientID);
-        model.setRow(rowIndex, values);
-        response.sendRedirect(request.getContextPath() + "/patient?" + model.getKeyName() + "=" + patientID);
+        model.setRowThroughView(row, values);
+
+        response.sendRedirect(request.getContextPath() + "/patient?row=" + row);
       } else if ("delete".equals(action)) {
-        int row = model.getRowIndexInDfByValue(model.getKeyName(), patientID);
-        if (row < 0) {
-          throw new IllegalArgumentException("Patient not found");
-        }
-        model.deleteRow(row);
+        model.deleteRowThroughView(row);
         response.sendRedirect("/main");
       } else {
         throw new IllegalArgumentException("Unkown action" + action);

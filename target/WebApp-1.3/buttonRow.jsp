@@ -14,11 +14,8 @@
   <form action="/export" method="get">
     <button type="submit" class="button">Export</button>
   </form>
-  <form action="/undo" method="get">
-    <button type="submit" class="button">Undo</button>
-  </form>
-  <form action="/redo" method="get">
-    <button type="submit" class="button">Redo</button>
+  <form action="/save" method="get">
+    <button type="submit" class="button">Save</button>
   </form>
   <form action="/statistics" method="get">
     <button type="submit" class="button">Statistics</button>

@@ -8,14 +8,14 @@ import java.util.Set;
 
 public class SearchEngine {
 
-  /* 
-  Search for rows in a Frame where the value in the searchColumn matches the keyword
-  Option to use regex
-  Returns a DataFrameView of the matching rows 
+  /*
+   * Search for rows in a Frame where the value in the searchColumn matches the
+   * keyword
+   * Option to use regex
+   * Returns a DataFrameView of the matching rows
    */
 
-  public DataFrameView search(DataFrameView view, String searchColumn, String searchTerm, boolean useRegex)
-  {
+  public DataFrameView search(DataFrameView view, String searchColumn, String searchTerm, boolean useRegex) {
     Pattern pattern = buildPattern(searchTerm, useRegex);
 
     List<Integer> filteredIndices = new ArrayList<>();
@@ -30,8 +30,7 @@ public class SearchEngine {
     return new DataFrameView(view, filteredIndices, null);
   }
 
-  public DataFrameView searchAll(DataFrameView view, String searchTerm, boolean useRegex)
-  {
+  public DataFrameView searchAll(DataFrameView view, String searchTerm, boolean useRegex) {
     Pattern pattern = buildPattern(searchTerm, useRegex);
 
     List<Integer> filteredIndices = new ArrayList<>();
@@ -49,10 +48,8 @@ public class SearchEngine {
     }
     return new DataFrameView(view, filteredIndices, null);
   }
-  
 
-  private Pattern buildPattern(String searchTerm, boolean useRegex) 
-  {
+  private Pattern buildPattern(String searchTerm, boolean useRegex) {
     if (useRegex) {
       return Pattern.compile(searchTerm);
     } else {

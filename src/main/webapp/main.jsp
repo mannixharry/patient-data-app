@@ -11,6 +11,8 @@
       <jsp:include page="/search.jsp" />
       <jsp:include page="/sort.jsp" />
       <jsp:include page="/import.jsp" />
+      <jsp:include page="/export.jsp" />
+      <jsp:include page="/save.jsp" />
       <jsp:include page="/buttonRow.jsp" />
     </div>
   </body>

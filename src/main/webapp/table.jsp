@@ -2,74 +2,76 @@
 <%@ page import = "java.util.List" %>
 <%@ page import = "java.util.ArrayList" %>
 <%@ page import = "uk.ac.ucl.view.TableData" %>
+
 <%
-String pageMode = (String) request.getAttribute("pageMode");
-TableData table = (TableData) request.getAttribute("table");
-
-String key = (String) request.getAttribute("key");
-
-List<String> names = null;
-List<List<String>> columns = null;
-int columnCount = 0;
-int rowCount = 0;
-boolean hasData = false;
-
-if (table != null) {
-  names = table.getNames();
-  columns = table.getColumns();
-  hasData = columns != null 
-  && !columns.isEmpty() 
-  && !names.isEmpty() 
+  // Fetch and unpack TableData from request
+  TableData table = (TableData) request.getAttribute("table");
+  String pageMode = (String) request.getAttribute("pageMode");
+  String key = (String) request.getAttribute("key");
+  
+  List<String> names = table.getNames();
+  List<List<String>> columns = table.getColumns();
+  
+  // Validate retrieved table data
+  boolean hasData = columns != null
+  && !columns.isEmpty()
+  && !names.isEmpty()
   && !columns.get(0).isEmpty();
-  columnCount = names.size();
-  rowCount = hasData ? columns.get(0).size() : 0;
-}
-
-Integer rowID = (Integer) request.getAttribute("rowID");
-String patientID = (String) request.getAttribute("patientID");
-boolean edit = "edit-by-row".equals(pageMode) || "edit-by-ID".equals(pageMode);
-boolean hasRow = rowID != null;
-boolean hasKey = patientID != null;
-
+  int columnCount = names.size();
+  int rowCount = hasData ? columns.get(0).size() : 0;
+  
+  // Assumption: pageMode equal to 'edit' -> 'row' intialized
+  Integer row = (Integer) request.getAttribute("row");
+  // Display error message if the table is missing data
 if (!hasData) { %>
-  <p class = "error-message">Error: No results</p>
+<p class = "error-message">Error: No results</p>
 <% } else { %>
-  <div class = "table-container">
-    <table>
-      <thead>
-        <tr>
-          <th class="top-header left-header">Row</th>
-          <% for (String name : names) { %>
-            <th class="top-header"><%= name %></th>
-          <% } %>
-        </tr>
-      </thead>
-      <tbody>
-        <% for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) { %>
-          <tr>
-              <td class="left-header">
-                <% if (edit) { %>
-                  <span class="row-link"><%=rowID%></span>
-                <% } else { %>
-                  <a href = "<%="patient?row=" + rowIndex%>" class="row-link"><%=rowIndex%></a>
-                <% } %>
-              </td>
-            <% for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-              String value = columns.get(columnIndex).get(rowIndex);
-            %>
-              <td>
-                <% if (names.get(columnIndex).equals(key) && !edit) { %>
-                <a href =  "<%="patient?" + key + "=" + columns.get(columnIndex).get(rowIndex)%>">
-                  <%= value %>
-                </a>
-                <% } else { %> 
-                  <%= value %>
-                <% } %> 
-              </td>
-            <% } %>
-          </tr>
+<%-- Logic to display table --%>
+<div class = "table-container">
+  <table>
+    <thead>
+      <tr>
+        <%-- Add headers to table attaching 'left-header' to the top left cell
+        and 'top-header' to each header in the row --%>
+        <th class="top-header left-header">Row</th>
+        <% for (String name : names) { %>
+        <th class="top-header"><%= name %></th>
         <% } %>
-      </tbody>
-    </table>
-  </div>
+      </tr>
+    </thead>
+    <tbody>
+      <%-- Display each table entries by: iterating through the rows and nesting iteration over columns --%>
+      <% for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) { %>
+      <tr>
+        <td class="left-header"> <%-- First column gets 'left-header' tag --%>
+          <%-- If in 'edit' mode, display the original 'row' number instead of 0 --%>
+          <% if ("edit".equals(pageMode)) { %>
+          <span class="row-link"><%=row%></span>
+          <% } else { %>
+          <%-- Display the row number in the current model view (rowIndex) --%>
+          <a href = "<%=request.getContextPath() + "/patient?row=" + rowIndex%>" class="row-link"><%=rowIndex%></a>
+          <% } %>
+        </td>
+        <%-- Iterate over column indices --%>
+        <% for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+          String value = columns.get(columnIndex).get(rowIndex);
+        %>
+        <td>
+          <%-- Display the value in row rowIndex and column ColumnIndex --%>
+          <%-- If the column is the primary key then make displayed value a hyperlink to that patient --%>
+          <%-- Could maybe pass row into parameter instead (need to check)--%>
+          <% if (names.get(columnIndex).equals(key) && !"edit".equals(pageMode)) { %>
+          <a href = "<%=request.getContextPath() + "/patient?row=" + rowIndex%>">
+            <%= value %>
+          </a>
+          <% } else { %>
+          <%= value %>
+          <% } %>
+        </td>
+        <% } %>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
 <% } %>

@@ -17,15 +17,20 @@ If path parameter has been set, then "keyList" has been initialized
   List<String> keyList = (List<String>) request.getAttribute("keyList");
   
 if (pageMode.equals("import")) { %>
+<%--- Display 'fileName.csv' buttons that pass input to ImportServlet through 'path' parameter --%>
 <form action="/import" method="get" class="button-row">
   <span class="info">Select a file</span>
   <% for (String fileName : files) { %>
   <button class="small-button" type="submit" name="path" value="<%=fileName%>"> <%= fileName %> </button>
   <% } %>
 </form>
-<% if (path != null && !path.isEmpty()) { %>
+<%-- Run only if file has been selected --%>
+<% if (path != null && !path.isEmpty()) { %> 
 <form action="/import" method="get" class = "button-row">
+  <%-- Hidden 'path' input ensures previously input path parameter is not lost upon form submission--%>
   <input type="hidden" name="path" value = "<%=path%>">
+  <%-- Display 'key' buttons which list the possible primary keys for the user to choose from --%>
+  <%-- And pass the input to ImportServlet using 'key' parameter --%>
   <span class="info">Select key</span>
   <button class="small-button" type="submit" name="key" value="">None</button>
   <% for (String columnName : keyList) { %>
@@ -34,6 +39,7 @@ if (pageMode.equals("import")) { %>
 </form>
 <% } %>
 
+<%-- Show live-feedback: opened file name; chosen key + 'Back' button --%>
 <% if (path != null && !path.isEmpty()) { %>
 <div class="button-row">
   <span class="info">

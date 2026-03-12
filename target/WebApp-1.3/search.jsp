@@ -1,11 +1,14 @@
 <%@ page import = "java.util.List" %>
 <%@ page import = "java.util.ArrayList" %>
-
+<%@ page import = "uk.ac.ucl.view.TableData" %>
 <% 
+TableData table = (TableData) request.getAttribute("table");
+String pageMode = (String) request.getAttribute("pageMode");
+
 String searchColumn = request.getParameter("searchColumn");
 String searchTerm = request.getParameter("searchTerm");
-
-if (pageMode.equals("search")) {
+%>
+<% if (pageMode.equals("search")) {
   List<String> buttonNames = new ArrayList<>();
   buttonNames.add("ANY");
   buttonNames.addAll(table.getNames()); %>

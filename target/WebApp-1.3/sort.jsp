@@ -1,7 +1,10 @@
 <%@ page import = "java.util.List" %>
 <%@ page import = "java.util.ArrayList" %>
+<%@ page import = "uk.ac.ucl.view.TableData" %>
+<%
+TableData table = (TableData) request.getAttribute("table");
+String pageMode = (String) request.getAttribute("pageMode");
 
-<% 
 String sortColumn = request.getParameter("sortColumn");
 
 if (pageMode.equals("sort")) {

@@ -1,10 +1,7 @@
 package uk.ac.ucl.servlets;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -17,36 +14,25 @@ import java.util.List;
 
 import java.io.IOException;
 
-@WebServlet({"/new"})
-public class NewServlet extends HttpServlet {
-  public NewServlet () {
-  }
-
-  public void forwardToError(HttpServletRequest request, HttpServletResponse response, String message) 
-  throws IOException, ServletException {
-    request.setAttribute("errorMessage", message);
-    ServletContext context = this.getServletContext();
-    RequestDispatcher dispatch = context.getRequestDispatcher("/error.jsp");
-    dispatch.forward(request, response);
-  }
-
+@WebServlet({ "/new" })
+public class NewServlet extends BaseServlet {
+  // NewServlet manages 'new' actions
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    try { 
-      ServletContext context = this.getServletContext();
-      RequestDispatcher dispatch = context.getRequestDispatcher("/patient.jsp");
-
+    try {
       Model model = ModelFactory.getModel();
-      model.emptyView();
-      
-      TableData patientTable = TableData.fromView(model.getView());
-      request.setAttribute("patientTable", patientTable);
+
+      request.setAttribute("pageMode", "edit");
       request.setAttribute("isNew", true);
+
+      // Attach the key to the request
       request.setAttribute("key", model.getKeyName());
 
-      dispatch.forward(request, response);
-    } catch (IllegalArgumentException e)
-    {
+      TableData table = TableData.fromView(model.getView());
+      request.setAttribute("table", table);
+      forward(request, response, "/new.jsp");
+
+    } catch (IllegalArgumentException e) {
       forwardToError(request, response, "Error loading data: " + e.getMessage());
     } catch (Exception e) {
       forwardToError(request, response, "Unexpected error: " + e.getMessage());
@@ -59,30 +45,38 @@ public class NewServlet extends HttpServlet {
       String action = request.getParameter("action");
       Model model = ModelFactory.getModel();
 
-      if ("add".equals(action)) {
+      if ("new".equals(action)) {
+
         List<String> names = model.getColumnNames();
         List<String> values = new ArrayList<>(names.size());
 
         for (String name : names) {
           values.add(request.getParameter(name));
         }
-        
-        String patientID = values.get(model.getKeyIndex());
 
-        if (patientID == null || patientID.isEmpty()) {
-          request.setAttribute("retryFlag", true);
-          request.setAttribute("retryValues", values);
-          doGet(request, response);
-        } else {
-          model.addRow(values);
-          response.sendRedirect(request.getContextPath() + "/patient?" + model.getKeyName() + "=" + patientID);
+        String ID = request.getParameter(model.getKeyName());
+        if (model.getKeyName() != null) {
+          if (ID == null || ID.isEmpty()) {
+            request.setAttribute("retryMessage", "ID field cannot be empty");
+            request.setAttribute("retryValues", values);
+            doGet(request, response);
+            return; 
+          } else if (model.getRowIndexInDfByValue(model.getKeyName(), ID) != -1) {
+            request.setAttribute("retryMessage", "ID already in use");
+            request.setAttribute("retryValues", values);
+            doGet(request, response);
+            return;
+          }
         }
+        model.addRow(values);
+        model.refreshView();
+        response.sendRedirect(request.getContextPath() + "/patient?row=" + model.getLastRowIndex());
       } else {
         throw new IllegalArgumentException("Unkown action" + action);
       }
     } catch (IllegalArgumentException e) {
       forwardToError(request, response, "Error updating patient: " + e.getMessage());
-    } catch (Exception e) { 
+    } catch (Exception e) {
       forwardToError(request, response, "Unexpected error: " + e.getMessage());
     }
   }

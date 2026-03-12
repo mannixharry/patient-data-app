@@ -1,5 +1,6 @@
 package uk.ac.ucl.model;
-
+import java.nio.file.Path;
+import java.nio.file.Paths;
 public class ModelFactory {
 
   private static Model model; 
@@ -9,7 +10,7 @@ public class ModelFactory {
     if (model == null)
     {
       model = new Model();
-      final String pathToCsv = "data/patients100.csv";
+      final Path pathToCsv = Paths.get("data/patients100.csv");
       model.loadCsv(pathToCsv);
     }
     return model;

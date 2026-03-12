@@ -9,19 +9,20 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class DataLoader {
   
   private static final Logger logger = Logger.getLogger(DataLoader.class.getName());
 
-  private void validatePath(String pathToCsv) 
+  private void validatePath(Path pathToCsv) 
   {
-    if (pathToCsv == null || pathToCsv.isBlank()) {
-      throw new IllegalArgumentException("Path to CSV cannot be null / empty");
+    if (pathToCsv == null) {
+      throw new IllegalArgumentException("Path to CSV cannot be null");
     }
   }
 
@@ -44,7 +45,7 @@ public class DataLoader {
     df.addRowByValues(row);
   }
 
-  private void parseCsv(DataFrame df, CSVParser csvParser, String pathToCsv)
+  private void parseCsv(DataFrame df, CSVParser csvParser, Path pathToCsv)
   {
     List<String> headers = csvParser
       .getHeaderNames()
@@ -67,12 +68,12 @@ public class DataLoader {
     logger.info("Loaded " + df.getRowCount() + " rows from " + pathToCsv);
   }
 
-  public DataFrame load(String pathToCsv)
+  public DataFrame load(Path pathToCsv)
   {
     validatePath(pathToCsv);
     DataFrame df = new DataFrame();
     try (
-      Reader reader = new FileReader(pathToCsv); 
+      BufferedReader reader = Files.newBufferedReader(pathToCsv); 
       CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
     ) { 
         parseCsv(df, csvParser, pathToCsv);

@@ -1,5 +1,6 @@
 package uk.ac.ucl.model;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public class Model {
@@ -7,20 +8,21 @@ public class Model {
   private final DataLoader dataLoader = new DataLoader();
   SearchEngine searchEngine = new SearchEngine();
   SortEngine sortEngine = new SortEngine();
-  ViewEngine viewEngine = new ViewEngine();
 
-  private DataFrame df; 
-  private DataFrameView view; 
+  private DataFrame df;
+  private DataFrameView view;
+  private Path pathToCsv;
+
   private String key;
 
-  public void loadCsv(String pathToCsv)
-  {
+  public void loadCsv(Path pathToCsv) {
     this.df = dataLoader.load(pathToCsv);
     this.view = DataFrameView.fullView(df);
+    this.pathToCsv = pathToCsv;
   }
 
   public List<String> getColumnNames() {
-    return df.getColumnNames(); 
+    return df.getColumnNames();
   }
 
   public String getKeyName() {
@@ -36,11 +38,13 @@ public class Model {
   }
 
   public boolean checkValidKey(String key) {
-    if (key == null || key.isEmpty()) {return true;}
+    if (key == null || key.isEmpty()) {
+      return true;
+    }
     List<String> keyEntries = df.getColumnValues(key);
     return keyEntries.size() == keyEntries.stream().distinct().count();
   }
-  
+
   public int getKeyIndex() {
     return df.getColumnNames().indexOf(getKeyName());
   }
@@ -57,6 +61,17 @@ public class Model {
     df.setRowByValues(row, values);
   }
 
+  public void setRowThroughView(int row, List<String> values) {
+    df.setRowByValues(view.getRowIndexInDf(row), values);
+  }
+
+  public void deleteRowThroughView(int row) {
+    df.deleteRow(view.getRowIndexInDf(row));
+  }
+
+  public int getLastRowIndex() {
+    return df.getRowCount() - 1;
+  }
   public void addRow(List<String> values) {
     df.addRowByValues(values);
   }
@@ -69,22 +84,31 @@ public class Model {
     return view;
   }
 
-  public void restrictViewRows(List<Integer> rowIndices)
-  {
-    view = viewEngine.restrictRows(view, rowIndices);
+  public DataFrameView getFullView() {
+    return DataFrameView.fullView(df);
   }
 
-  public void restrictViewToRowRange(int start, int end)
-  {
-    view = viewEngine.restrictToRowRange(view, start, end);
+  public DataFrameView getEmptyView() {
+    return DataFrameView.emptyView(df);
   }
 
-  public void restrictViewColumns(List<String> columnNames) 
-  {
-    view = viewEngine.restrictColumns(view, columnNames);
+  public void restrictViewRows(List<Integer> rowIndices) {
+    view = view.restrictRows(rowIndices);
   }
 
-  public void refreshView() { 
+  public void restrictViewToRowRange(int start, int end) {
+    view = view.restrictToRowRange(start, end);
+  }
+
+  public void restrictViewColumns(List<String> columnNames) {
+    view = view.restrictColumns(columnNames);
+  }
+
+  public void restrictViewToRow(int rowIndex) {
+    view = view.restrictToRow(rowIndex);
+  }
+
+  public void refreshView() {
     view = DataFrameView.fullView(df);
   }
 
@@ -102,5 +126,9 @@ public class Model {
 
   public void sort(String sortColumn, boolean ascending) {
     view = sortEngine.sort(view, sortColumn, ascending);
+  }
+
+  public Path getPathToCsv() {
+    return pathToCsv;
   }
 }

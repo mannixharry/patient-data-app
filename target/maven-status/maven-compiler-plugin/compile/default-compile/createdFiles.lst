@@ -11,10 +11,12 @@ uk/ac/ucl/view/TableExporter.class
 uk/ac/ucl/servlets/MainServlet.class
 uk/ac/ucl/view/TableData.class
 uk/ac/ucl/model/ModelFactory.class
+uk/ac/ucl/servlets/BaseServlet.class
+uk/ac/ucl/servlets/ExportServlet.class
 uk/ac/ucl/model/DataFrame.class
 uk/ac/ucl/utility/CsvDirectoryScanner.class
 uk/ac/ucl/servlets/EditServlet.class
 uk/ac/ucl/model/SortEngine.class
 uk/ac/ucl/model/Column.class
+uk/ac/ucl/servlets/SaveServlet.class
 uk/ac/ucl/servlets/ImportServlet.class
-uk/ac/ucl/model/ViewEngine.class
