@@ -15,7 +15,7 @@ import uk.ac.ucl.model.DataFrameView;
 import uk.ac.ucl.model.Model;
 import uk.ac.ucl.model.ModelFactory;
 
-@WebServlet({ "/patient" })
+@WebServlet({ "/edit" })
 public class EditServlet extends BaseServlet {
   // EditServlet manages 'update' and 'delete' actions
   @Override
@@ -28,6 +28,11 @@ public class EditServlet extends BaseServlet {
       request.setAttribute("pageMode", "edit");
 
       Model model = ModelFactory.getModel();
+
+
+      request.setAttribute("page", model.getCurrentPage()+1);
+      request.setAttribute("pageSize", model.getPageSize());
+      request.setAttribute("pageTotal", model.getTotalPages());
 
       // Retrieve row parameter
       // Row is the row number in the current view identified by row
@@ -47,8 +52,8 @@ public class EditServlet extends BaseServlet {
       // The same JSP handles 'edit' and 'new' commands requests - isNew is a flag to
       // the JSP to specify the type of request. In this case, we submit 'false'
       request.setAttribute("isNew", false);
-      // Pass the request onto the 'patient' JSP
-      forward(request, response, "patient.jsp");
+      // Pass the request onto the 'edit' JSP
+      forward(request, response, "edit.jsp");
     } catch (IllegalArgumentException e) {
       forwardToError(request, response, "Error loading data: " + e.getMessage());
     } catch (Exception e) {
@@ -75,7 +80,7 @@ public class EditServlet extends BaseServlet {
 
         model.setRowThroughView(row, values);
 
-        response.sendRedirect(request.getContextPath() + "/patient?row=" + row);
+        response.sendRedirect(request.getContextPath() + "/edit?row=" + row);
       } else if ("delete".equals(action)) {
         model.deleteRowThroughView(row);
         response.sendRedirect("/main");

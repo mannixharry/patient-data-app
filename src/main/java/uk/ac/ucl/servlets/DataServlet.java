@@ -14,20 +14,39 @@ import uk.ac.ucl.view.TableData;
 
 @WebServlet({ "/data" })
 public class DataServlet extends BaseServlet {
-  public DataServlet() {
-  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     // Passes a JSP-friendly copy of the current model view to main.jsp for display
+
+    if (request.getAttribute("pageMode") == null) {
+      request.setAttribute("pageMode", "main");
+    }
+
     try {
       Model model = ModelFactory.getModel();
+
+      String pageParameter = request.getParameter("page");
+
+      if (pageParameter != null && !pageParameter.isEmpty()) {
+        try {
+          int page = Integer.parseInt(pageParameter);
+          model.setCurrentPage(page-1);
+        } catch (NumberFormatException e) {
+          
+        } // Ignore garbage input
+      }
+
       // Convert current view of Model to JSP-friendly (readonly) format
-      TableData table = TableData.fromView(model.getView());
+      TableData table = TableData.fromView(model.getPagedView());
       // Set 'table' and 'key' attributes.
+
       request.setAttribute("table", table);
       request.setAttribute("key", model.getKeyName());
-      
+
+      request.setAttribute("page", model.getCurrentPage()+1);
+      request.setAttribute("pageSize", model.getPageSize());
+      request.setAttribute("pageTotal", model.getTotalPages());
       // Forward to main.jsp for display
       forward(request, response, "/main.jsp");
 

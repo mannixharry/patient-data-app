@@ -42,9 +42,8 @@
 <a href="main" class="button">Back</a>
 <% } else { %>
 
-<h3> Edit Patient </h3>
 <%-- Set the servlet to recieve the input data isNew -> NewServlet, !isNew -> EditServlet --%>
-<form action ="<%= isNew ? "new" : "patient"%>" method ="post">
+<form action ="<%= isNew ? "new" : "edit"%>" method ="post">
   <input type="hidden" name="row" value="<%=row%>">
   <div class="table-container">
     <table>

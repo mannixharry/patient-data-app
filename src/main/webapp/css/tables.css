@@ -3,7 +3,7 @@
   /* vh and vw are each 1% of the screen width and height*/
   width: fit-content;
   max-width: 90vw;
-  max-height: 70vh;
+  max-height: 75vh;
   overflow: auto;
   background-color: white;
   margin: 2vh auto;

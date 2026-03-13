@@ -65,8 +65,9 @@ public class TableExporter {
   }
 
   public void toCSV(Path pathToCsv) throws IOException {
-    BufferedWriter writer = Files.newBufferedWriter(pathToCsv);
-    writeCSV(writer);
+    try (BufferedWriter writer = Files.newBufferedWriter(pathToCsv)) {
+      writeCSV(writer);
+    }
   }
 
   public void writeJSON(Writer writer) throws IOException {
@@ -92,7 +93,8 @@ public class TableExporter {
   }
 
   public void toJSON(Path pathToJson) throws IOException {
-    BufferedWriter writer = Files.newBufferedWriter(pathToJson);
-    writeJSON(writer);
+    try (BufferedWriter writer = Files.newBufferedWriter(pathToJson)) {
+      writeJSON(writer);
+    }
   }
 }

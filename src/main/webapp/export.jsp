@@ -11,6 +11,8 @@
     String fileType = request.getParameter("fileType");
     String location = request.getParameter("location");
     
+    String savedPath = (String) request.getAttribute("path");
+    
     List<String> names = table.getNames();
     List<List<String>> columns = table.getColumns();
     
@@ -22,32 +24,42 @@
     int columnCount = names.size();
     int rowCount = hasData ? columns.get(0).size() : 0;
   %>
-
-  <form action="/export" method="get" class=" button-row">
+  <% if (fileName == null || fileName.isEmpty()) { %>
+  <form action="/exportFile" method="get" class=" button-row">
     <span class="info">Export as: </span>
     <button class="small-button" type="submit" name="fileType" value="csv">CSV</button>
     <button class="small-button" type="submit" name="fileType" value="json">JSON</button>
   </form>
 
   <% if (fileType != null && !fileType.isEmpty()) { %>
-  <form action="/export" method="get" class="button-row">
+  <form action="/exportFile" method="get" class="button-row">
     <span class="info">Export to: </span>
     <input type="hidden" name="fileType" value="<%=fileType%>">
     <button class="small-button" type="submit" name="location" value="download">Downloads</button>
     <button class="small-button" type="submit" name="location" value="data">Server Files</button>
   </form>
 
+
   <% if (location != null && !location.isEmpty()) { %>
   <div class="button-row">
-    <form action="/export" method="get" class="inline-form">
+    <form action="/exportFile" method="get" class="inline-form">
       <input type="hidden" name="fileType" value="<%=fileType%>">
       <input type="hidden" name="location" value="<%=location%>">
-      <span class="info">Exporting as <%="csv".equals(fileType) ? "CSV" : "JSON"%> to <%="data".equals(location) ? "Server Files" : "Downloads"%> </span>
+      <span class="info">Exporting as <%="csv".equals(fileType) ? "CSV" : "JSON"%> to <%="data".equals(location) ? "Server Files: " : "Downloads: "%> </span>
       <input type="text" name="fileName" placeholder="Enter file name" value="<%= fileName != null ? fileName : "" %>">
       <button type="submit" class="small-button">Go</button>
     </form>
   </div>
+  <% } %>
+  <% } %>
+  <% } else { %>
 
+  <% if (fileName != null && !fileName.isEmpty()) {
+  if ("data".equals(location)) { %>
+  <div class="button-row">
+    <span class="info">Saved <%=rowCount%> rows to <%=savedPath%> </span>
+  </div>
+  <% } %>
   <% } %>
   <% } %>
   <% } %>

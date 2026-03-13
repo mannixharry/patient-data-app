@@ -58,16 +58,10 @@ public class DataFrameView {
   }
 
   public static DataFrameView fullView(DataFrame df) {
-    if (df.getColumnNames().isEmpty()) {
-      throw new IllegalArgumentException("Cannot create full view of empty DataFrame");
-    }
     return new DataFrameView(df, null, null);
   }
 
   public static DataFrameView emptyView(DataFrame df) {
-    if (df.getColumnNames().isEmpty()) {
-      throw new IllegalArgumentException("Cannot create empty view of empty DataFrame");
-    }
     List<Integer> emptyIndices = new ArrayList<>();
     return new DataFrameView(df, emptyIndices, null);
   }
@@ -78,6 +72,10 @@ public class DataFrameView {
 
   public List<Integer> getRowIndices() {
     return List.copyOf(rowIndices);
+  }
+
+  public int getRowCount() {
+    return rowIndices.size();
   }
 
   public List<Integer> getColumnIndices() {

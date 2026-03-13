@@ -49,7 +49,7 @@ if (!hasData) { %>
           <span class="row-link"><%=row%></span>
           <% } else { %>
           <%-- Display the row number in the current model view (rowIndex) --%>
-          <a href = "<%=request.getContextPath() + "/patient?row=" + rowIndex%>" class="row-link"><%=rowIndex%></a>
+          <a href = "<%=request.getContextPath() + "/edit?row=" + rowIndex%>" class="row-link"><%=rowIndex%></a>
           <% } %>
         </td>
         <%-- Iterate over column indices --%>
@@ -61,7 +61,7 @@ if (!hasData) { %>
           <%-- If the column is the primary key then make displayed value a hyperlink to that patient --%>
           <%-- Could maybe pass row into parameter instead (need to check)--%>
           <% if (names.get(columnIndex).equals(key) && !"edit".equals(pageMode)) { %>
-          <a href = "<%=request.getContextPath() + "/patient?row=" + rowIndex%>">
+          <a href = "<%=request.getContextPath() + "/edit?row=" + rowIndex%>">
             <%= value %>
           </a>
           <% } else { %>

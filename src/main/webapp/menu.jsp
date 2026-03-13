@@ -8,14 +8,20 @@
   <form action="/new" method="get">
     <button type="submit" class="button">New</button>
   </form>
-  <form action="/import" method="get">
-    <button type="submit" class="button">Import</button>
+  <form action="/importFile" method="get">
+    <button type="submit" class="button">Import File</button>
   </form>
-  <form action="/export" method="get">
-    <button type="submit" class="button">Export</button>
+  <form action="/exportFile" method="get">
+    <button type="submit" class="button">Export File</button>
   </form>
-  <form action="/save" method="get">
-    <button type="submit" class="button">Save</button>
+  <form action="/saveFile" method="get">
+    <button type="submit" class="button">Save File</button>
+  </form>
+  <form action="/deleteFile" method="get">
+    <button type="submit" class="button">Delete File</button>
+  </form>
+  <form action="/view" method="get">
+    <button type="submit" class="button">Set View</button>
   </form>
   <form action="/statistics" method="get">
     <button type="submit" class="button">Statistics</button>

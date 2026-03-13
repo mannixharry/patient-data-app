@@ -70,7 +70,7 @@ public class NewServlet extends BaseServlet {
         }
         model.addRow(values);
         model.refreshView();
-        response.sendRedirect(request.getContextPath() + "/patient?row=" + model.getLastRowIndex());
+        response.sendRedirect(request.getContextPath() + "/edit?row=" + model.getLastRowIndex());
       } else {
         throw new IllegalArgumentException("Unkown action" + action);
       }

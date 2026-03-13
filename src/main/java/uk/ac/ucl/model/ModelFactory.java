@@ -11,7 +11,9 @@ public class ModelFactory {
     {
       model = new Model();
       final Path pathToCsv = Paths.get("data/patients100.csv");
-      model.loadCsv(pathToCsv);
+      model.load(pathToCsv);
+      model.setKey("ID");
+      model.setCurrentPage(0);
     }
     return model;
   }

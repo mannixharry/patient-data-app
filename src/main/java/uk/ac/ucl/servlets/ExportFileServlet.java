@@ -14,8 +14,8 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@WebServlet({ "/export" })
-public class ExportServlet extends BaseServlet {
+@WebServlet({ "/exportFile" })
+public class ExportFileServlet extends BaseServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -31,6 +31,10 @@ public class ExportServlet extends BaseServlet {
       boolean hasExportLocation = exportLocation != null && !exportLocation.isEmpty();
 
       Model model = ModelFactory.getModel();
+
+      request.setAttribute("fileName", fileName);
+      request.setAttribute("fileType", fileType);
+      request.setAttribute("location", exportLocation);
 
       if (hasFileName && hasFileType && hasExportLocation) {
         TableData table = TableData.fromView(model.getView());
@@ -48,12 +52,13 @@ public class ExportServlet extends BaseServlet {
         if ("data".equals(exportLocation)) {
           String projectRoot = System.getProperty("user.dir"); // COMP0004-Coursework
           Path dataDirectory = Paths.get(projectRoot, "data");
-          Path exportPath = dataDirectory.resolve(fileName); // This will break things
+          Path exportPath = dataDirectory.resolve(fileName);
           if ("csv".equals(fileType)) {
             exporter.toCSV(exportPath);
           } else if ("json".equals(fileType)) {
             exporter.toJSON(exportPath);
           }
+          request.setAttribute("path", exportPath.toString());
         } else if ("download".equals(exportLocation)) {
           response.setContentType("text/csv");
           response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
@@ -66,11 +71,6 @@ public class ExportServlet extends BaseServlet {
           return; // Avoid forwarding request to DataServlet
         }
       }
-
-      request.setAttribute("fileName", fileName);
-      request.setAttribute("fileType", fileType);
-      request.setAttribute("location", exportLocation);
-
       // Dispatch request to the DataServlet
       // 'table' and 'key' request attributes will be set by the DataServlet
 

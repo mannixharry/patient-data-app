@@ -11,14 +11,15 @@ public class Model {
 
   private DataFrame df;
   private DataFrameView view;
+  private PagedView pagedView;
   private Path pathToCsv;
-
   private String key;
 
-  public void loadCsv(Path pathToCsv) {
-    this.df = dataLoader.load(pathToCsv);
+  public void load(Path path) {
+    this.df = dataLoader.load(path);
     this.view = DataFrameView.fullView(df);
-    this.pathToCsv = pathToCsv;
+    this.pagedView = new PagedView(view, 50);
+    this.pathToCsv = path;
   }
 
   public List<String> getColumnNames() {
@@ -72,6 +73,7 @@ public class Model {
   public int getLastRowIndex() {
     return df.getRowCount() - 1;
   }
+
   public void addRow(List<String> values) {
     df.addRowByValues(values);
   }
@@ -94,22 +96,27 @@ public class Model {
 
   public void restrictViewRows(List<Integer> rowIndices) {
     view = view.restrictRows(rowIndices);
+    pagedView.updateSourceView(view);
   }
 
   public void restrictViewToRowRange(int start, int end) {
     view = view.restrictToRowRange(start, end);
+    pagedView.updateSourceView(view);
   }
 
   public void restrictViewColumns(List<String> columnNames) {
     view = view.restrictColumns(columnNames);
+    pagedView.updateSourceView(view);
   }
 
   public void restrictViewToRow(int rowIndex) {
     view = view.restrictToRow(rowIndex);
+    pagedView.updateSourceView(view);
   }
 
   public void refreshView() {
     view = DataFrameView.fullView(df);
+    pagedView.updateSourceView(view);
   }
 
   public void emptyView() {
@@ -119,16 +126,45 @@ public class Model {
   public void search(String searchColumn, String searchTerm, boolean useRegex) {
     if (searchColumn.equals("ANY")) {
       view = searchEngine.searchAll(view, searchTerm, useRegex);
+      pagedView.updateSourceView(view);
+
     } else {
       view = searchEngine.search(view, searchColumn, searchTerm, useRegex);
+      pagedView.updateSourceView(view);
+
     }
   }
 
   public void sort(String sortColumn, boolean ascending) {
     view = sortEngine.sort(view, sortColumn, ascending);
+    pagedView.updateSourceView(view);
   }
 
   public Path getPathToCsv() {
     return pathToCsv;
+  }
+
+  public DataFrameView getPagedView() {
+    return pagedView.getCurrentPageView();
+  }
+
+  public void setCurrentPage(int pageIndex) {
+    pagedView.setCurrentPage(pageIndex);
+  }
+
+  public int getCurrentPage() {
+    return pagedView.getCurrentPage();
+  }
+
+  public int getPageSize() {
+    return pagedView.getPageSize();
+  }
+
+  public void setPageSize(int size) {
+    pagedView.setPageSize(size);
+  }
+
+  public int getTotalPages() {
+    return pagedView.getTotalPages();
   }
 }
