@@ -2,12 +2,15 @@ package uk.ac.ucl.model;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
+
 
 public class Model {
 
   private final DataLoader dataLoader = new DataLoader();
   SearchEngine searchEngine = new SearchEngine();
   SortEngine sortEngine = new SortEngine();
+  ChartEngine chartEngine = new ChartEngine(25);
 
   private DataFrame df;
   private DataFrameView view;
@@ -166,5 +169,11 @@ public class Model {
 
   public int getTotalPages() {
     return pagedView.getTotalPages();
+  }
+
+  public Map<String, Map<String, Integer>> getChartData() {
+    Map<String, Map<String, Integer>> charts = chartEngine.getChartData(view);
+
+    return charts;
   }
 }

@@ -1,0 +1,21 @@
+.centre {
+  display: flex;
+  justify-content: center; /* horizontal centering */
+  width: 100%;             /* full width */
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;          /* allow charts to wrap to next line */
+  justify-content: center;  /* center charts horizontally */
+  gap: 40px;                /* spacing between charts */
+  padding: 20px;
+}
+
+.chart-container img {
+  flex: 0 1 45%;            /* each chart takes ~45% of container width */
+  max-width: 45%;
+  height: auto;
+  border: 1px solid var(--blue-600);
+  border-radius: 8px;       /* optional: rounded corners */
+}

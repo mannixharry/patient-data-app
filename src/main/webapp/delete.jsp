@@ -52,6 +52,7 @@ if (fileOpenFlag != null && fileOpenFlag) { %>
   <span class="info">Successfully deleted file: </span>
   <span class="info"><%=path%></span>
   <form action="/main" method="get" class="inline-form">
+    <input type="hidden" name="noRefresh" value="true">
     <button type="submit" class="small-button">Back</button>
   </form>
 </div>

@@ -28,6 +28,7 @@
       <button type="submit" name="ascending" value="false" class="small-button">Descending</button>
     </form>
     <form action="/main" method="get" class="inline-form">
+      <input type="hidden" name="noRefresh" value="true">
       <button type="submit" class="small-button">Back</button>
     </form>
   </div>

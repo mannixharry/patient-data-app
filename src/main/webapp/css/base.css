@@ -37,3 +37,9 @@ h3 {
   text-decoration: none;
   white-space: nowrap;
 }
+
+.page-title {
+  text-align : center;
+  color: var(--blue-600);
+  margin: 10px 0
+}

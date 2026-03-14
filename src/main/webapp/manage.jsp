@@ -106,7 +106,7 @@
       <button class="button" type="submit" name="action" value="delete">Delete</button>
       <% } %>
       <%-- Show back button (really a link to /main) --%>
-      <a href="main" class="button">Back</a>
+      <a href="main?noRefresh=true" class="button">Back</a>
       <%-- Give feedback on invalid inputs --%>
       <% if (retryFlag) { %>
       <p class="info"><%=retryMessage%></p>

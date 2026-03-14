@@ -40,6 +40,7 @@ public class EditServlet extends BaseServlet {
 
       // Get the row number in the main DataFrame uniquely identified by row
       DataFrameView single_view = model.getView().restrictToRow(row);
+
       TableData table = TableData.fromView(single_view);
       request.setAttribute("table", table);
 
@@ -64,9 +65,10 @@ public class EditServlet extends BaseServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     try {
+
       // The type of action is specified by the 'action' parameter
       Model model = ModelFactory.getModel();
-
+      
       String action = request.getParameter("action");
       Integer row = Integer.parseInt(request.getParameter("row"));
 

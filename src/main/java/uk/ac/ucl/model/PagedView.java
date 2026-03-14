@@ -43,6 +43,7 @@ public class PagedView {
 
   public void setPageSize(int size) {
     pageSize = Math.max(1, size);
+    currentPage = Math.max(0,getTotalPages()-1);
   }
 }
 

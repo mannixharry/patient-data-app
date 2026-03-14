@@ -49,6 +49,7 @@ if (pageMode.equals("import")) { %>
     <% } %>
   </span>
   <form action="/main" method="get" class="inline-form">
+    <input type="hidden" name="noRefresh" value="true">
     <button type="submit" class="small-button">Back</button>
   </form>
 </div>

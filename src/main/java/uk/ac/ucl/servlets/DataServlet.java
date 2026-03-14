@@ -25,7 +25,7 @@ public class DataServlet extends BaseServlet {
 
     try {
       Model model = ModelFactory.getModel();
-
+      request.setAttribute("title", model.getPathToCsv());
       String pageParameter = request.getParameter("page");
 
       if (pageParameter != null && !pageParameter.isEmpty()) {
@@ -47,6 +47,7 @@ public class DataServlet extends BaseServlet {
       request.setAttribute("page", model.getCurrentPage()+1);
       request.setAttribute("pageSize", model.getPageSize());
       request.setAttribute("pageTotal", model.getTotalPages());
+      request.setAttribute("rowTotal", model.getView().getRowCount());
       // Forward to main.jsp for display
       forward(request, response, "/main.jsp");
 

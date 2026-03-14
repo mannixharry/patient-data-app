@@ -8,7 +8,11 @@
   TableData table = (TableData) request.getAttribute("table");
   String pageMode = (String) request.getAttribute("pageMode");
   String key = (String) request.getAttribute("key");
-  
+
+  int currentPage = (int) request.getAttribute("page");
+  int pageSize = (int) request.getAttribute("pageSize");
+  int pageTotal = (int) request.getAttribute("pageTotal");
+
   List<String> names = table.getNames();
   List<List<String>> columns = table.getColumns();
   
@@ -46,10 +50,10 @@ if (!hasData) { %>
         <td class="left-header"> <%-- First column gets 'left-header' tag --%>
           <%-- If in 'edit' mode, display the original 'row' number instead of 0 --%>
           <% if ("edit".equals(pageMode)) { %>
-          <span class="row-link"><%=row%></span>
+          <span class="row-link"><%=1+row+pageSize*(currentPage-1)%></span>
           <% } else { %>
           <%-- Display the row number in the current model view (rowIndex) --%>
-          <a href = "<%=request.getContextPath() + "/edit?row=" + rowIndex%>" class="row-link"><%=rowIndex%></a>
+          <a href = "<%=request.getContextPath() + "/edit?row=" + rowIndex%>" class="row-link"><%=1+rowIndex+pageSize*(currentPage-1)%></a>
           <% } %>
         </td>
         <%-- Iterate over column indices --%>

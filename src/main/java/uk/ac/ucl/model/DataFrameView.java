@@ -91,6 +91,10 @@ public class DataFrameView {
     return viewNames;
   }
 
+  public boolean hasColumn(String columnName) {
+    return getColumnNames().contains(columnName);
+  }
+
   public List<String> getColumnValues(String columnName) {
     List<String> sourceColumn = source.getColumnValues(columnName);
     List<String> viewColumn = new ArrayList<>(rowIndices.size());

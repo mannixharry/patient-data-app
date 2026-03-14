@@ -22,8 +22,14 @@ public class MainServlet extends BaseServlet {
       request.setAttribute("pageMode", "main");
 
       Model model = ModelFactory.getModel();
+
       // Refresh the model view so that it covers the whole DataFrame
-      model.refreshView();
+      String noRefreshParameter = request.getParameter("noRefresh");
+      boolean noRefresh = "true".equals(noRefreshParameter);
+
+      if (!noRefresh) {
+        model.refreshView();
+      }
 
       // Dispatch request to the DataServlet
       // 'table' and 'key' request attributes will be set by the DataServlet

@@ -1,5 +1,5 @@
 .button {
-  padding: 8px 12px;
+  padding: 6px 8px;
   border: 1px solid var(--blue-100);
   border-radius: 6px;
   font-size: 16px;
@@ -16,7 +16,7 @@
   background-color: var(--blue-500);
 }
 
-.button, .small-button:active{
+.button:active, .small-button:active{
   transform: translateY(1px);
 }
 
@@ -37,6 +37,11 @@
 .small-button:hover {
   background-color: var(--blue-300);
 }
+
+input[type="checkbox"]:checked + .small-button {
+  background-color: var(--blue-300);
+}
+
 .button-row {
   display: flex;
   gap:8px;
@@ -45,8 +50,8 @@
   max-height: 5vh;
   overflow: auto;
   background-color: white;
-  margin: 2vh auto;
-  padding-bottom: 16px;
+  margin: 0.1vh auto;
+  padding-bottom: 8px;
 }
 
 .inline-form {

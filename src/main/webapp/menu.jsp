@@ -23,13 +23,16 @@
   <form action="/view" method="get">
     <button type="submit" class="button">Set View</button>
   </form>
-  <form action="/statistics" method="get">
-    <button type="submit" class="button">Statistics</button>
   </form>
-  <form action="/graphs" method="get">
-    <button type="submit" class="button">Graphs</button>
+    <form action="/main" method="get">
+    <input type="hidden" name="noRefresh" value="false">
+    <button type="submit" class="button">Refresh View</button>
+  </form>
+  <form action="/charts" method="get">
+    <button type="submit" class="button">Charts</button>
   </form>
   <form action="/main" method="get">
+    <input type="hidden" name="noRefresh" value="true">
     <button type="submit" class="button">Back</button>
-  </form>
+
 </div>

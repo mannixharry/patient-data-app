@@ -46,7 +46,7 @@ public class NewServlet extends BaseServlet {
       Model model = ModelFactory.getModel();
 
       if ("new".equals(action)) {
-
+        model.refreshView();
         List<String> names = model.getColumnNames();
         List<String> values = new ArrayList<>(names.size());
 
@@ -69,6 +69,7 @@ public class NewServlet extends BaseServlet {
           }
         }
         model.addRow(values);
+
         model.refreshView();
         response.sendRedirect(request.getContextPath() + "/edit?row=" + model.getLastRowIndex());
       } else {
