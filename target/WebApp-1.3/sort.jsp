@@ -9,7 +9,7 @@
   
   if (pageMode.equals("sort")) {
     List<String> buttonNames = new ArrayList<>();
-  buttonNames.addAll(table.getNames()); %>
+  buttonNames.addAll(table.names()); %>
   <div class="button-row">
     <span class="info">Select a column</span>
     <form action="/sort" method="get" class="inline-form">
@@ -28,6 +28,7 @@
       <button type="submit" name="ascending" value="false" class="small-button">Descending</button>
     </form>
     <form action="/main" method="get" class="inline-form">
+      <input type="hidden" name="noRefresh" value="true">
       <button type="submit" class="small-button">Back</button>
     </form>
   </div>

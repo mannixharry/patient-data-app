@@ -1,4 +1,3 @@
-<%@ page import = "uk.ac.ucl.view.TableData" %>
 <html>
   <head>
     <jsp:include page="/header.jsp"/>
@@ -6,10 +5,10 @@
 
   <body>
     <div class="main">
-      <h3> Patient Data </h3>
+      <h3 class="page-title">Single Row Data</h3>
       <jsp:include page="/error.jsp"/>
       <jsp:include page="/table.jsp"/>
-     <jsp:include page="/managePatient.jsp"/>
+     <jsp:include page="/manage.jsp"/>
     </div>
   </body>
 </html>

@@ -1,19 +1,28 @@
 package uk.ac.ucl.model;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+/**
+ * ModelFactory implements the singleton pattern to enable a single instance of
+ * the Model class to be shared across in the Controller.
+ */
 public class ModelFactory {
 
-  private static Model model; 
+  private static Model model;
 
-  public static Model getModel()
-  {
-    if (model == null)
-    {
+  /**
+   * Returns the singleton model.
+   * @return the {@link Model} object
+   */
+  public static Model getModel() {
+    // Instantiate the model once
+    if (model == null) {
       model = new Model();
-      final Path pathToCsv = Paths.get("data/patients100.csv");
-      model.load(pathToCsv);
+      final Path pathToDefaultFile = Paths.get("data/patients100.csv");
+      model.load(pathToDefaultFile);
       model.setKey("ID");
-      model.setCurrentPage(0);
+      model.getPagedView().setCurrentPage(0);
     }
     return model;
   }

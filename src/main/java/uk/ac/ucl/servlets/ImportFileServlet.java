@@ -13,13 +13,29 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+/**
+ * Handles file import requests, loading a CSV or JSON file from the '/data'
+ * directory into the model's {@link DataFrame} object. Uses a multi-step form
+ * design where 'path' and 'key' parameters are accumulated across several GET
+ * requests.
+ */
 @WebServlet({ "/importFile" })
 public class ImportFileServlet extends BaseServlet {
-  
+
+  /**
+   * Handles the GET request for file imports. If 'path' is present, loads the
+   * file and returns the available key columns. If 'key is present, set it as the
+   * model's current primary key.
+   * 
+   *
+   * @param request  the HTTP request, optionally with 'path' and 'key' parameters
+   * @param response the HTTP response
+   * @throws IOException      if forwarding fails
+   * @throws ServletException if the request dispatcher cannot forward
+   */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
-      // Flag to tell JSPs to display (current) table + import input bar
       request.setAttribute("pageMode", "import");
 
       Model model = ModelFactory.getModel();
@@ -29,7 +45,7 @@ public class ImportFileServlet extends BaseServlet {
       Path dataDirectory = Paths.get(projectRoot, "data");
 
       // User inputs (see import.jsp) are passed as parameters in the URL
-      // Since the user enters this information using seperate HTML forms, we store
+      // Since the user enters this information using separate HTML forms, we store
       // each parameter, when they are input, in the URL, until the full request is
       // gathered. This is a common design pattern in the project
       String inputPath = request.getParameter("path");
@@ -38,7 +54,7 @@ public class ImportFileServlet extends BaseServlet {
       boolean hasPath = inputPath != null && !inputPath.isEmpty();
       boolean hasKey = inputKey != null && !inputKey.isEmpty();
 
-      // Retrieve a list of csv file names in webapp/data and attach to request
+      // Retrieve a list of file names in webapp/data and attach to request
       List<String> files = DirectoryScanner.getCsvAndJsonFiles(dataDirectory.toString());
       request.setAttribute("files", files);
 
@@ -51,21 +67,19 @@ public class ImportFileServlet extends BaseServlet {
         // column values. We attach this to the request so import.jsp can show the user
         // a list of possible keys to select from
         request.setAttribute("keyList",
-            model.getColumnNames().stream().filter(key -> model.checkValidKey(key)).toList());
+            model.getDf().getColumnNames().stream().filter(key -> model.checkValidKey(key)).toList());
       }
 
       if (hasKey) {
-        // Update model to include input key and attach it as a request parameter
         model.setKey(inputKey);
         request.setAttribute("key", inputKey);
       }
 
-      // Dispatch request to DataServlet (so the new table is displayed)
       // DataServlet also attaches TableData so it is unnecessary here
       forward(request, response, "/data");
 
     } catch (Exception e) {
-      forwardToError(request, response, "Import failed" + e.getMessage());
+      forwardToError(request, response, "Import failed: " + e.getMessage());
     }
   }
 }

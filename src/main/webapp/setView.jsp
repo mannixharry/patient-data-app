@@ -20,7 +20,7 @@ if (pageMode.equals("setView")) { %>
     <% if (isPrimary) { %>
     <!-- Always submit the primary key -->
     <input type="hidden" name="columns" value="<%=key%>">
-    <!-- Optional checkbox just for display, can remove if hidden anyway -->
+    <!-- Optional checkbox just for display -->
     <input type="checkbox" id="<%=id%>" checked disabled hidden>
     <label for="<%=id%>" class="small-button"><%=key%></label>
     <% } else { %>

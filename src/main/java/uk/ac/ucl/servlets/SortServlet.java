@@ -1,33 +1,34 @@
 package uk.ac.ucl.servlets;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import uk.ac.ucl.model.Model;
 import uk.ac.ucl.model.ModelFactory;
-import uk.ac.ucl.view.TableData;
 
 import java.io.IOException;
 
-@WebServlet({"/sort"})
-public class SortServlet extends HttpServlet {
-  public SortServlet () {
-  }
+/**
+ * Handles sort requests, reordering the model's view by a given column.
+ * Forwards to DataServlet to render the updated view. If no sort parameters are
+ * provided, forwards without changing the view.
+ */
+@WebServlet({ "/sort" })
+public class SortServlet extends BaseServlet {
 
-  public void forwardToError(HttpServletRequest request, HttpServletResponse response, String message) 
-  throws IOException, ServletException {
-    request.setAttribute("errorMessage", message);
-    ServletContext context = this.getServletContext();
-    RequestDispatcher dispatch = context.getRequestDispatcher("/error.jsp");
-    dispatch.forward(request, response);
-  }
-
+  /**
+   * Handles the GET request for sorting.
+   * 
+   * @param request  the HTTP request, optionally with 'sortColumn' and
+   *                 'ascending' (true/false) parameters
+   * @param response the HTTP response
+   * @throws IOException      if forwarding fails
+   * @throws ServletException if the request dispatcher cannot forward
+   * 
+   */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       request.setAttribute("pageMode", "sort");
 
@@ -36,24 +37,16 @@ public class SortServlet extends HttpServlet {
 
       Model model = ModelFactory.getModel();
 
-      if (sortColumn!= null && !sortColumn.isEmpty()) {
-        if (ascending != null) {
-          if ("true".equals(ascending)) {
-            model.sort(sortColumn, true);
-          } else if ("false".equals(ascending)) {
-            model.sort(sortColumn, false);
-          }
+      if (sortColumn != null && !sortColumn.isEmpty() && ascending != null) {
+        if ("true".equals(ascending)) {
+          model.sort(sortColumn, true);
+        } else if ("false".equals(ascending)) {
+          model.sort(sortColumn, false);
         }
       }
-
-      TableData table = TableData.fromView(model.getView());
-      request.setAttribute("table", table);
-
-      ServletContext context = this.getServletContext();
-      RequestDispatcher dispatch = context.getRequestDispatcher("/data");
-      dispatch.forward(request, response);
+      forward(request, response, "/data");
     } catch (Exception e) {
-      forwardToError(request, response, "Sort failed" + e.getMessage());
+      forwardToError(request, response, "Sort failed: " + e.getMessage());
     }
   }
 }

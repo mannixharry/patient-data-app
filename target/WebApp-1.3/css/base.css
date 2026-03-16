@@ -1,9 +1,9 @@
 :root {
-  --blue-100: #bac4ce;  /* lightest */
+  --blue-100: #bac4ce;
   --blue-200: #a5b3bf;
   --blue-300: #90a1b1;
   --blue-400: #7b8fa2;
-  --blue-500: #677e92;  /* darkest */
+  --blue-500: #677e92;
   --blue-600: #4d5e73;
   --blue-700: #304055;
 }/* Global colour schema */
@@ -36,4 +36,10 @@ h3 {
   font-weight: bold;
   text-decoration: none;
   white-space: nowrap;
+}
+
+.page-title {
+  text-align : center;
+  color: var(--blue-600);
+  margin: 10px 0
 }

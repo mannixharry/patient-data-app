@@ -1,33 +1,34 @@
 package uk.ac.ucl.servlets;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import uk.ac.ucl.model.Model;
 import uk.ac.ucl.model.ModelFactory;
-import uk.ac.ucl.view.TableData;
 
 import java.io.IOException;
 
-@WebServlet({"/search"})
-public class SearchServlet extends HttpServlet {
-  public SearchServlet () {
-  }
+/**
+ * Handles search requests, filtering the model's current view to rows matching
+ * the given search term. If no search parameters are provided, it does not
+ * modify the view. Forwards to DataServlet to
+ * render the updated view.
+ */
+@WebServlet({ "/search" })
+public class SearchServlet extends BaseServlet {
 
-  public void forwardToError(HttpServletRequest request, HttpServletResponse response, String message) 
-  throws IOException, ServletException {
-    request.setAttribute("errorMessage", message);
-    ServletContext context = this.getServletContext();
-    RequestDispatcher dispatch = context.getRequestDispatcher("/error.jsp");
-    dispatch.forward(request, response);
-  }
-
+  /**
+   * Handles the GET request for search. 
+   * 
+   * @param request the HTTP request, optionally with 'searchColumn' and 'searchTerm' parameters
+   * @param response the HTTP response
+   * @throws IOException if forwarding fails
+   * @throws ServletException if the request dispatcher cannot forward
+   */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       request.setAttribute("pageMode", "search");
 
@@ -38,18 +39,12 @@ public class SearchServlet extends HttpServlet {
 
       if (searchColumn != null && !searchColumn.isEmpty()) {
         if (searchTerm != null && !searchTerm.isEmpty()) {
-          model.search(searchColumn, searchTerm, false);
+          model.search(searchColumn, searchTerm);
         }
       }
-
-      TableData table = TableData.fromView(model.getView());
-      request.setAttribute("table", table);
-      
-      ServletContext context = this.getServletContext();
-      RequestDispatcher dispatch = context.getRequestDispatcher("/data");
-      dispatch.forward(request, response);
+      forward(request, response, "/data");
     } catch (Exception e) {
-      forwardToError(request, response, "Search failed" + e.getMessage());
+      forwardToError(request, response, "Search failed: " + e.getMessage());
     }
   }
 }

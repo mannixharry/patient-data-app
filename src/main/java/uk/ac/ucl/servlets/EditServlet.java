@@ -5,94 +5,83 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import java.io.IOException;
 
 import uk.ac.ucl.view.TableData;
+import uk.ac.ucl.model.DataFrame;
 import uk.ac.ucl.model.DataFrameView;
 import uk.ac.ucl.model.Model;
 import uk.ac.ucl.model.ModelFactory;
 
+/**
+ * Handles viewing and editing a single row, identified by the 'row' parameter
+ * (the row index in the current model's {@link DataFrameView} view object - not
+ * the underlying {@link DataFrame}).
+ * GET: loads the edit form for the given row.
+ * POST: applies an 'update' or 'delete' action to the specified row.
+ */
 @WebServlet({ "/edit" })
 public class EditServlet extends BaseServlet {
-  // EditServlet manages 'update' and 'delete' actions
+  /**
+   * Loads the edit form for a single row.
+   * 
+   * @param request  the HTTP request. Must contain a 'row' parameter specifying
+   *                 the row index in the model's current view
+   * @param response the HTTP response
+   * @throws IOException      if forwarding fails
+   * @throws ServletException if the request dispatcher cannot forward
+   */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    // Uniquely identifies the 'patient' (or generally a row in the database) using
-    // 'row' parameter - the row number in the current model VIEW (important)
-
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     try {
-      // Flag to tell JSPs to display 'edit' page
-      request.setAttribute("pageMode", "edit");
-
       Model model = ModelFactory.getModel();
+      request.setAttribute("pageMode", "edit");
+      request.setAttribute("page", model.getPagedView().getCurrentPage() + 1);
+      request.setAttribute("pageSize", model.getPagedView().getPageSize());
+      request.setAttribute("pageTotal", model.getPagedView().getTotalPages());
 
-
-      request.setAttribute("page", model.getCurrentPage()+1);
-      request.setAttribute("pageSize", model.getPageSize());
-      request.setAttribute("pageTotal", model.getTotalPages());
-
-      // Retrieve row parameter
-      // Row is the row number in the current view identified by row
       int row = Integer.parseInt(request.getParameter("row"));
+      DataFrameView singleView = model.getFullView().restrictToRow(row);
+      TableData table = TableData.fromView(singleView);
 
-      // Get the row number in the main DataFrame uniquely identified by row
-      DataFrameView single_view = model.getView().restrictToRow(row);
-
-      TableData table = TableData.fromView(single_view);
       request.setAttribute("table", table);
-
-      // Attach the row number to the request
       request.setAttribute("row", row);
-
-      // Attach the key to the request
       request.setAttribute("key", model.getKeyName());
-
-      // The same JSP handles 'edit' and 'new' commands requests - isNew is a flag to
-      // the JSP to specify the type of request. In this case, we submit 'false'
+      // The same JSP handles 'edit' and 'new' commands requests - isNew is a flag for this
       request.setAttribute("isNew", false);
-      // Pass the request onto the 'edit' JSP
       forward(request, response, "edit.jsp");
-    } catch (IllegalArgumentException e) {
-      forwardToError(request, response, "Error loading data: " + e.getMessage());
     } catch (Exception e) {
-      forwardToError(request, response, "Unexpected error: " + e.getMessage());
+      forwardToError(request, response, "Unexpected error loading row: " + e.getMessage());
     }
   }
 
+  /**
+   * Applies an 'update' or 'delete' action to a single patient row. The action is
+   * specified by the 'action' parameter, and the target row by the 'row'
+   * parameter (index in the model's current view).
+   */
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     try {
-
-      // The type of action is specified by the 'action' parameter
       Model model = ModelFactory.getModel();
-      
+
       String action = request.getParameter("action");
-      Integer row = Integer.parseInt(request.getParameter("row"));
+      int row = Integer.parseInt(request.getParameter("row"));
 
       if ("update".equals(action)) {
-        List<String> names = model.getColumnNames();
-        List<String> values = new ArrayList<>(names.size());
-
-        for (String name : names) {
-          values.add(request.getParameter(name));
-        }
-
+        List<String> values = model.getFullView().getColumnNames().stream().map(request::getParameter).toList();
         model.setRowThroughView(row, values);
-
         response.sendRedirect(request.getContextPath() + "/edit?row=" + row);
       } else if ("delete".equals(action)) {
         model.deleteRowThroughView(row);
-        response.sendRedirect("/main");
+        response.sendRedirect(request.getContextPath() + "/main?noColumnRefresh=true");
       } else {
-        throw new IllegalArgumentException("Unkown action" + action);
+        throw new IllegalArgumentException("Unknown action: " + action);
       }
-    } catch (IllegalArgumentException e) {
-      forwardToError(request, response, "Error updating patient: " + e.getMessage());
     } catch (Exception e) {
-      forwardToError(request, response, "Unexpected error: " + e.getMessage());
+      forwardToError(request, response, "Unexpected error modifying row: " + e.getMessage());
     }
   }
 }

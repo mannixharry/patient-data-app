@@ -1,4 +1,3 @@
-<%@ page import = "uk.ac.ucl.view.TableData" %>
 <html>
   <head>
     <jsp:include page="/header.jsp"/>

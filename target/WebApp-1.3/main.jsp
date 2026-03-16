@@ -5,6 +5,7 @@
 
   <body>
     <div class="main">
+      <jsp:include page="/title.jsp" />
       <jsp:include page="/error.jsp" />
       <jsp:include page="/table.jsp" />
       <jsp:include page="/pages.jsp" />

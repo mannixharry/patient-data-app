@@ -11,7 +11,7 @@
 <% if (pageMode.equals("search")) {
   List<String> buttonNames = new ArrayList<>();
   buttonNames.add("ANY");
-buttonNames.addAll(table.getNames()); %>
+buttonNames.addAll(table.names()); %>
 <div class="button-row">
   <span class="info">Select a column</span>
   <form action="/search" method="get" class="inline-form">
@@ -30,6 +30,7 @@ buttonNames.addAll(table.getNames()); %>
     <button type="submit" class="small-button">Go</button>
   </form>
   <form action="/main" method="get" class="inline-form">
+    <input type="hidden" name="noRefresh" value="true">
     <button type="submit" class="small-button">Back</button>
   </form>
 </div>

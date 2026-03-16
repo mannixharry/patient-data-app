@@ -23,8 +23,7 @@
   <form action="/view" method="get">
     <button type="submit" class="button">Set View</button>
   </form>
-  </form>
-    <form action="/main" method="get">
+  <form action="/main" method="get">
     <input type="hidden" name="noRefresh" value="false">
     <button type="submit" class="button">Refresh View</button>
   </form>
@@ -34,5 +33,4 @@
   <form action="/main" method="get">
     <input type="hidden" name="noRefresh" value="true">
     <button type="submit" class="button">Back</button>
-
-</div>
+  </div>

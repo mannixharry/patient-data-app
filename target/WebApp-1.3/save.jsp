@@ -10,8 +10,8 @@
 
   String confirmation = request.getParameter("confirmation");
 
-  List<String> names = table.getNames();
-  List<List<String>> columns = table.getColumns();
+  List<String> names = table.names();
+  List<List<String>> columns = table.columns();
   
   // Validate retrieved table data
   boolean hasData = columns != null
@@ -27,7 +27,7 @@
     <button class="small-button" type="submit" name="confirmation" value="yes">Yes</button>
   </form>
   <form action="/main" method="get" class="inline-form">
-    <button aciton="/main" method="get" type="submit" class="small-button">No</button>
+    <button action="/main" method="get" type="submit" class="small-button">No</button>
   </form>
 </div>
 

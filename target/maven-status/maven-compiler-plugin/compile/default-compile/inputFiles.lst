@@ -10,11 +10,11 @@
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/model/SearchEngine.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/model/SortEngine.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/BaseServlet.java
+/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/ChartServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/DataServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/DeleteFileServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/EditServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/ExportFileServlet.java
-/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/GraphServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/ImportFileServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/MainServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/NewServlet.java
@@ -23,5 +23,6 @@
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/SetViewServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/servlets/SortServlet.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/utility/DirectoryScanner.java
+/Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/view/ChartRenderer.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/view/TableData.java
 /Users/harrymannix/Documents/COMP0004-Coursework/src/main/java/uk/ac/ucl/view/TableExporter.java

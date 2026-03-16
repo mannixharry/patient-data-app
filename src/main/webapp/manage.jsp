@@ -7,8 +7,8 @@
   String pageMode = (String) request.getAttribute("pageMode");
   String key = (String) request.getAttribute("key");
   
-  List<String> names = table.getNames();
-  List<List<String>> columns = table.getColumns();
+  List<String> names = table.names();
+  List<List<String>> columns = table.columns();
   
   // Validate retrieved table data
   boolean hasData = columns != null

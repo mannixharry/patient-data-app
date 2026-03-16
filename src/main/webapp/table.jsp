@@ -14,8 +14,8 @@
   int pageTotal = (int) request.getAttribute("pageTotal");
 
 
-  List<String> names = table.getNames();
-  List<List<String>> columns = table.getColumns();
+  List<String> names = table.names();
+  List<List<String>> columns = table.columns();
   
   // Validate retrieved table data
   boolean hasData = columns != null
@@ -64,7 +64,6 @@ if (!hasData) { %>
         <td>
           <%-- Display the value in row rowIndex and column ColumnIndex --%>
           <%-- If the column is the primary key then make displayed value a hyperlink to that patient --%>
-          <%-- Could maybe pass row into parameter instead (need to check)--%>
           <% if (names.get(columnIndex).equals(key) && !"edit".equals(pageMode)) { %>
           <a href = "<%=request.getContextPath() + "/edit?row=" + (rowIndex+pageSize*(currentPage-1))%>">
             <%= value %>

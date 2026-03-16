@@ -11,40 +11,47 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles view configuration requests, allowing the user to restrict which
+ * columns are displayed, and set the page size. Forwards to DataServlet to
+ * render the updated view.
+ */
 @WebServlet({ "/view" })
 public class SetViewServlet extends BaseServlet {
 
+  /**
+   * Handles the GET request for view configuration. If 'columns' parameters are
+   * present, restricts the view to those columns. If 'pageSize' is present,
+   * updates
+   * the page size accordingly.
+   */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
-      // Flag to tell JSPs to display (current) table + import input bar
-      request.setAttribute("pageMode", "setView");
-
       Model model = ModelFactory.getModel();
-
-      request.setAttribute("keyList", model.getColumnNames());
-
+      request.setAttribute("pageMode", "setView");
+      request.setAttribute("keyList", model.getDf().getColumnNames());
       String[] viewColumnsArray = request.getParameterValues("columns");
       if (viewColumnsArray != null) {
-        List<String> viewColumns = viewColumnsArray == null ? new ArrayList<>()
-            : new ArrayList<>(List.of(viewColumnsArray));
+        List<String> viewColumns = new ArrayList<>(List.of(viewColumnsArray));
         model.refreshView();
-        if (viewColumns != null) {
-          model.restrictViewColumns(viewColumns);
-        }
+        model.restrictViewColumns(viewColumns);
       }
 
       String pageSizeParameter = request.getParameter("pageSize");
       if (pageSizeParameter != null && !pageSizeParameter.isEmpty()) {
-        int newPageSize = Integer.parseInt(pageSizeParameter);
-        model.setPageSize(newPageSize);
+        try {
+          int newPageSize = Integer.parseInt(pageSizeParameter);
+          request.setAttribute("pageSize", newPageSize);
+          model.getPagedView().setPageSize(newPageSize);
+          model.updatePaging();
+        } catch (NumberFormatException e) {
+          // Ignore invalid page parameter; keep the current page
+        }
       }
-      // Dispatch request to DataServlet (so the new table is displayed)
-      // DataServlet also attaches TableData so it is unnecessary here
       forward(request, response, "/data");
-
     } catch (Exception e) {
-      forwardToError(request, response, "Set View failed" + e.getMessage());
+      forwardToError(request, response, "Set View failed: " + e.getMessage());
     }
   }
 }

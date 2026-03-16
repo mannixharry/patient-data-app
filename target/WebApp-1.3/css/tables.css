@@ -30,7 +30,6 @@ th {
   border-right: 1px solid var(--blue-100);
   border-bottom: 1px solid var(--blue-100);
   padding: 8px 12px;
-  white-space: wrap;
   text-align: left;
   color: var(--blue-700);
 }
@@ -44,13 +43,13 @@ td {
   border-bottom: 1px solid var(--blue-100);
   border-right: 1px solid var(--blue-100);
   padding: 8px 12px;
-  white-space: nowrap; /* prevents text from wrapping to a new line */
+  white-space: nowrap;
   text-align: left;
   box-sizing: border-box;
 }
 
 .top-header {
-  border-top: 1px solid var(--blue-100) ;
+  border-top: 1px solid var(--blue-100);
 }
 
 .left-header {

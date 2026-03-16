@@ -11,7 +11,7 @@
 <% if (pageMode.equals("search")) {
   List<String> buttonNames = new ArrayList<>();
   buttonNames.add("ANY");
-buttonNames.addAll(table.getNames()); %>
+buttonNames.addAll(table.names()); %>
 <div class="button-row">
   <span class="info">Select a column</span>
   <form action="/search" method="get" class="inline-form">

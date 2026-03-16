@@ -13,8 +13,8 @@
     
     String savedPath = (String) request.getAttribute("path");
     
-    List<String> names = table.getNames();
-    List<List<String>> columns = table.getColumns();
+    List<String> names = table.names();
+    List<List<String>> columns = table.columns();
     
     // Validate retrieved table data
     boolean hasData = columns != null
@@ -25,7 +25,7 @@
     int rowCount = hasData ? columns.get(0).size() : 0;
   %>
   <% if (fileName == null || fileName.isEmpty()) { %>
-  <form action="/exportFile" method="get" class=" button-row">
+  <form action="/exportFile" method="get" class="button-row">
     <span class="info">Export as: </span>
     <button class="small-button" type="submit" name="fileType" value="csv">CSV</button>
     <button class="small-button" type="submit" name="fileType" value="json">JSON</button>

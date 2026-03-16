@@ -1,13 +1,11 @@
 <%@ page import = "java.util.List" %>
 <%@ page import = "java.util.ArrayList" %>
-<%@ page import = "uk.ac.ucl.view.TableData" %>
 <%--
 Assumptions:
-"table", "pageMode" and "files" are initialized in any valid request
-If path parameter has been set, then "keyList" has been initialized
+'pageMode' and 'files' are initialized in any valid request
+If path parameter has been set, then 'keyList' has been initialized
 --%>
 <%
-  TableData table = (TableData) request.getAttribute("table");
   String pageMode = (String) request.getAttribute("pageMode");
   Boolean fileOpenFlag = (Boolean) request.getAttribute("fileOpenFlag");
   String path = request.getParameter("path");
@@ -15,7 +13,7 @@ If path parameter has been set, then "keyList" has been initialized
   
   List<String> files = (List<String>) request.getAttribute("files");
   
-if (pageMode.equals("delete")) { %>
+if ("delete".equals(pageMode)) { %>
 <%--- Display 'fileName.csv' buttons that pass input to ImportServlet through 'path' parameter --%>
 <form action="/deleteFile" method="get" class="button-row">
   <span class="info">Select a file</span>
@@ -41,7 +39,7 @@ if (fileOpenFlag != null && fileOpenFlag) { %>
     <button class="small-button" type="submit" name="confirmation" value="yes">Yes</button>
   </form>
   <form action="/main" method="get" class="inline-form">
-    <button aciton="/main" method="get" type="submit" class="small-button">No</button>
+    <button action="/main" method="get" type="submit" class="small-button">No</button>
   </form>
 </div>
 <% } %>
@@ -52,6 +50,7 @@ if (fileOpenFlag != null && fileOpenFlag) { %>
   <span class="info">Successfully deleted file: </span>
   <span class="info"><%=path%></span>
   <form action="/main" method="get" class="inline-form">
+    <input type="hidden" name="noRefresh" value="true">
     <button type="submit" class="small-button">Back</button>
   </form>
 </div>

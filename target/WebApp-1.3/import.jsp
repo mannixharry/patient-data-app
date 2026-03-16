@@ -1,13 +1,11 @@
 <%@ page import = "java.util.List" %>
 <%@ page import = "java.util.ArrayList" %>
-<%@ page import = "uk.ac.ucl.view.TableData" %>
 <%--
 Assumptions:
 "table", "pageMode" and "files" are initialized in any valid request
 If path parameter has been set, then "keyList" has been initialized
 --%>
 <%
-  TableData table = (TableData) request.getAttribute("table");
   String pageMode = (String) request.getAttribute("pageMode");
   
   String path = request.getParameter("path");
@@ -49,6 +47,7 @@ if (pageMode.equals("import")) { %>
     <% } %>
   </span>
   <form action="/main" method="get" class="inline-form">
+    <input type="hidden" name="noRefresh" value="true">
     <button type="submit" class="small-button">Back</button>
   </form>
 </div>

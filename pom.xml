@@ -100,7 +100,7 @@
       <artifactId>jackson-databind</artifactId>
       <version>2.16.1</version>
     </dependency>
-  <!-- Own dependecy for creating charts -->
+  <!-- Own dependency for creating charts -->
   <dependency>
     <groupId>org.jfree</groupId>
     <artifactId>jfreechart</artifactId>

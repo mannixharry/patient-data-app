@@ -10,30 +10,44 @@ import java.io.IOException;
 import uk.ac.ucl.model.Model;
 import uk.ac.ucl.model.ModelFactory;
 
+/**
+ * Entry point servlet that refreshes the model view and forwards to
+ * DataServlet. Has two optional parameters, 'noRefresh' and 'noColumnRefresh'
+ * to preserve view state across web-site navigations.
+ * - 'noRefresh': skips the model's {@link DataFrameView} refresh entirely, preserving the view state.
+ * - 'noColumnRefresh': refreshes the view but preserves the current selection of viewed columns.
+ */
 @WebServlet({ "/main" })
 public class MainServlet extends BaseServlet {
-  public MainServlet() {
-  }
 
+  /**
+   * Handles the GET request for the main page. 
+   * 
+   * @param request the HTTP request, optionally with 'noRefresh' or 'noColumnRefresh' parameters
+   * @param response the HTTP response
+   * @throws IOException if forwarding fails
+   * @throws ServletException if the request dispatcher cannot forward
+   */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
-      // Flag to tell JSPs to display table + main menu
       request.setAttribute("pageMode", "main");
 
       Model model = ModelFactory.getModel();
 
-      // Refresh the model view so that it covers the whole DataFrame
       String noRefreshParameter = request.getParameter("noRefresh");
-      boolean noRefresh = "true".equals(noRefreshParameter);
+      String noColumnRefreshParameter = request.getParameter("noColumnRefresh");
 
-      if (!noRefresh) {
+      boolean noRefresh = "true".equals(noRefreshParameter);
+      boolean noColumnRefresh = "true".equals(noColumnRefreshParameter);
+
+      if (!noRefresh && !noColumnRefresh) {
         model.refreshView();
+      } else if (!noRefresh) {
+        model.refreshRowView();
       }
 
-      // Dispatch request to the DataServlet
-      // 'table' and 'key' request attributes will be set by the DataServlet
-      forward(request, response, "/data");
+      redirect(request, response, "/data");
     } catch (Exception e) {
       forwardToError(request, response, "Unexpected error: " + e.getMessage());
     }
