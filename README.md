@@ -4,6 +4,8 @@
 tabular hospital datasets (patients, encounters, medications, and more), built
 on a from-scratch DataFrame/MVC stack - no database or web framework.*
 
+![The main data table view](docs/images/screenshot.png)
+
 ## What this is
 
 `Patient Data App` lets a user open a CSV or JSON dataset and interactively search, sort, page,
