@@ -6,8 +6,7 @@ on a from-scratch DataFrame/MVC stack - no database or web framework.*
 
 ## What this is
 
-`Patient Data App` lets a user open a CSV or JSON dataset - anything from a
-hundred to a hundred thousand rows - and interactively search, sort, page,
+`Patient Data App` lets a user open a CSV or JSON dataset and interactively search, sort, page,
 edit and chart it in the browser. It's built as a Maven web app: plain Java
 servlets and JSPs on top of a small in-memory data-processing layer, with no
 external database or front-end framework.
